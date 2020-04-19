@@ -11,27 +11,28 @@
     <div class="editor-toolbar">
         <fieldset>
             <legend>File</legend>
+            <button class="button-stretch button-small" @onclick="() => OpenMap(mapService.New())">New</button>
+            <button class="button-stretch button-small" @onclick="Save">Save</button>
+            <input type="checkbox" @bind="EnableAutoSave" /> Auto-save <br/>
+            @if (LastSaveTime != DateTime.MinValue)
+            {
+                <span><b>Last save:</b> @LastSaveTime</span>
+            }
+            else if (Map != null)
+            {
+                <b>Not saved</b>
+            }
+            <hr />
             @if (Map != null)
             {
                 <b>@Map.Name</b> <br />
                 <span>@Map.Description</span> <br />
                 <span><b>Size:</b> @Map.Width x @Map.Height</span> <br />
-                @if (LastSaveTime != DateTime.MinValue)
-                {
-                    <span><b>Last save:</b> @LastSaveTime</span>
-                }
-                else if(Map != null)
-                {
-                    <b>Not saved</b>
-                }
             }
             else
             {
                 <i>No map opened</i>
             }
-            <button class="button-stretch button-small" @onclick="() => OpenMap(mapService.New())">New</button>
-            <button class="button-stretch button-small" @onclick="Save">Save</button>
-            <input type="checkbox" @bind="EnableAutoSave" /> Auto-save
         </fieldset>
         <fieldset>
             <legend>Tools</legend>
@@ -52,11 +53,8 @@
         </fieldset>
         <fieldset>
             <legend>Layers</legend>
-            <EditorButton Text="Layer 2" Active="Layer == 5" OnClickCallback="() => SetLayer(5)"/>
-            <EditorButton Text="Layer 1" Active="Layer == 4" OnClickCallback="() => SetLayer(4)"/>
-            <EditorButton Text="Layer 0" Active="Layer == 3" OnClickCallback="() => SetLayer(3)"/>
-            <EditorButton Text="Unwalkable" Active="Layer == 2" OnClickCallback="() => SetLayer(2)"/>
-            <EditorButton Text="Walkable" Active="Layer == 1" OnClickCallback="() => SetLayer(1)"/>
+            <EditorButton Text="Overlay" Active="Layer == 2" OnClickCallback="() => SetLayer(2)"/>
+            <EditorButton Text="Solid" Active="Layer == 1" OnClickCallback="() => SetLayer(1)"/>
             <EditorButton Text="Floor" Active="Layer == 0" OnClickCallback="() => SetLayer(0)"/>
         </fieldset>
         <fieldset>
@@ -78,6 +76,16 @@
                     <td></td>
                 </tr>
             </table>
+            <hr/>
+            <b>Todo</b>
+            <ul>
+                <li>Show coordinates</li>
+                <li>Move to coordinates</li>
+                <li>Create/save marker</li>
+                <li>Teleport to marker</li>
+                <li>Delete marker</li>
+                <li>Map size (small/large)</li>
+            </ul>
         </fieldset>
         <p style="font-size: 85%; color: #999; text-align: center;">
             RPG Editor v0.1 (alpha)
@@ -112,7 +120,7 @@
                 }
                 else
                 {
-                    <p>No map data</p>
+                    <div style="width: 100%; text-align: center; margin-top: 360px; font-size: 36pt; color: #111; font-weight: bold;">NO MAP DATA</div>
                 }
                 <div style="clear: both;"></div>
             </div>
@@ -313,6 +321,7 @@
     private int Layer = 0;
     private (int X, int Y) Position = (0, 0);
     private DateTime LastSaveTime = DateTime.MinValue;
+    private Timer UpdateTimer;
 
     protected override void OnInitialized()
     {
@@ -321,7 +330,17 @@
         AutoSaveTimer.Elapsed += AutoSave;
         AutoSaveTimer.AutoReset = true;
         AutoSaveTimer.Start();
+        UpdateTimer = new Timer();
+        UpdateTimer.Interval = 200;
+        UpdateTimer.AutoReset = true;
+        UpdateTimer.Elapsed += UpdateTimerElapsed;
+        UpdateTimer.Start();
         base.OnInitialized();
+    }
+
+    private void UpdateTimerElapsed(object sender, EventArgs args)
+    {
+        InvokeAsync(StateHasChanged);
     }
 
     void OnTileChanged(int index)

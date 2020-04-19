@@ -232,6 +232,7 @@ fieldset legend {
 hr {
     border-bottom: 1px #888 solid;
     height: 1px;
+    margin: 8px 0;
 }
 
 /* Map */
@@ -247,8 +248,8 @@ hr {
 }
 
 .map-tile {
-    width: 31.5px;
-    height: 31.5px;
+    width: 32px;
+    height: 32px;
     float: left;
     font-size: 6pt;
     overflow: hidden;

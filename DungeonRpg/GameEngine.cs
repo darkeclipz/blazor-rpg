@@ -89,7 +89,7 @@ namespace DungeonRpg
         public int Width { get; set; }
         public int Height { get; set; }
         private int[,,] Data { get; set; }
-        public const int Layers = 6;
+        public const int Layers = 3;
 
         public Map()
         {
