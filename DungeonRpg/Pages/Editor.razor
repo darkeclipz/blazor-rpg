@@ -1,0 +1,319 @@
+﻿@page "/editor"
+@inject MapService mapService
+@inject ComponentService componentService
+@inject ItemService itemService
+@inject NpcService npcService
+@inject EnemyService enemyService
+@inject PlayerService playerService
+@using System.Timers 
+
+<div class="editor" @onkeyup="KeyboardHandler">
+    <div class="editor-toolbar">
+        <fieldset>
+            <legend>File</legend>
+            @if (Map != null)
+            {
+                <b>@Map.Description</b>
+            }
+            else
+            {
+                <i>No map opened</i>
+            }
+            <button class="button-stretch button-small" @onclick="() => OpenMap(mapService.New())">New</button>
+            <button class="button-stretch button-small" @onclick="Save">Save</button>
+            <input type="checkbox" @bind="EnableAutoSave"/> Auto-save
+        </fieldset>
+        <fieldset>
+            <legend>Tools</legend>
+            <div>
+                <table>
+                    <tr>
+                        <td><b>Tile</b>: <input type="text" @bind="SelectedTileIndex" style="width: 48px;" /></td>
+                        <td style="width: 40px;"><div class="tile tile-@SelectedTileIndex"></div></td>
+                    </tr>
+                </table>
+            </div>
+            <EditorButton Text="Pen" Active="Mode == DrawMode.Pen" OnClickCallback="() => SetMode(DrawMode.Pen)"/>
+            <EditorButton Text="Rectangle" Active="Mode == DrawMode.Rectangle" OnClickCallback="() => SetMode(DrawMode.Rectangle)"/>
+            <EditorButton Text="Line" Active="Mode == DrawMode.Line" OnClickCallback="() => SetMode(DrawMode.Line)"/>
+            <EditorButton Text="Fill" Active="Mode == DrawMode.Fill" OnClickCallback="() => SetMode(DrawMode.Fill)"/>
+            <EditorButton Text="Copy" Active="Mode == DrawMode.Copy" OnClickCallback="() => SetMode(DrawMode.Copy)"/>
+            <EditorButton Text="Remove" Active="Mode == DrawMode.Remove" OnClickCallback="() => SetMode(DrawMode.Remove)"/>
+        </fieldset>
+        <fieldset>
+            <legend>Layers</legend>
+            <EditorButton Text="Layer 2" Active="Layer == 5" OnClickCallback="() => SetLayer(5)"/>
+            <EditorButton Text="Layer 1" Active="Layer == 4" OnClickCallback="() => SetLayer(4)"/>
+            <EditorButton Text="Layer 0" Active="Layer == 3" OnClickCallback="() => SetLayer(3)"/>
+            <EditorButton Text="Unwalkable" Active="Layer == 2" OnClickCallback="() => SetLayer(2)"/>
+            <EditorButton Text="Walkable" Active="Layer == 1" OnClickCallback="() => SetLayer(1)"/>
+            <EditorButton Text="Floor" Active="Layer == 0" OnClickCallback="() => SetLayer(0)"/>
+        </fieldset>
+        <fieldset>
+            <legend>Nav</legend>
+            <button class="button-stretch button-small">Up</button>
+            <button class="button-stretch button-small">Down</button>
+            <button class="button-stretch button-small">Left</button>
+            <button class="button-stretch button-small">Right</button>
+        </fieldset>
+        <p style="font-size: 85%; color: #999; text-align: center;">
+            RPG Editor v0.1 (alpha)
+        </p>
+    </div>
+    <div class="editor-panel">
+        <div class="map-panel">
+            map
+        </div>
+        <div class="tile-panel">
+            <TilesetViewer TileIndex="SelectedTileIndex" TileChanged="OnTileChanged" />
+        </div>
+    </div>
+    <div class="editor-properties">
+
+        <!-- Maps -->
+        <fieldset>
+            <legend>Maps</legend>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <td>Map</td>
+                        <td>Description</td>
+                        <td>Width</td>
+                        <td>Height</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var map in mapService.All())
+                    {
+                        <tr>
+                            <td class="form-xlarge"><input type="text" @bind="map.Name" /></td>
+                            <td><input type="text" @bind="map.Description" /></td>
+                            <td class="form-small"><input type="text" @bind="map.Width" /></td>
+                            <td class="form-small"><input type="text" @bind="map.Height" /></td>
+                            <td class="form-xlarge">
+                                <button class="button-small" @onclick="() => OpenMap(map)">open</button>
+                                <button class="button-small" @onclick="() => map.Resize()">resize</button>
+                                <button class="button-small" @onclick="() => mapService.Remove(map)">delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5"><button class="button-small" @onclick="() => mapService.New()">new</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+
+        <!-- Items -->
+        <fieldset>
+            <legend>Items</legend>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Description</td>
+                        <td>Type</td>
+                        <td>Pages</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in itemService.All())
+                    {
+                        <tr>
+                            <td class="form-large"><input type="text" @bind="item.Name" /></td>
+                            <td><input type="text" @bind="item.Description" /></td>
+                            <td class="form-medium">@Item.GetItemType(item)</td>
+                            <td class="form-small">
+                                @if(item is Book book)
+                                {
+                                    <input type="text" @bind="book.Pages" />
+                                }
+                            </td>
+                            <td class="form-medium">
+                                <button class="button-small" @onclick="() => itemService.Remove(item)">delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <button class="button-small" @onclick="() => itemService.New()">new item</button>
+                            <button class="button-small" @onclick="() => itemService.New(ItemType.Weapon)">new weapon</button>
+                            <button class="button-small" @onclick="() => itemService.New(ItemType.Armor)">new armor</button>
+                            <button class="button-small" @onclick="() => itemService.New(ItemType.Jewelry)">new jewelry</button>
+                            <button class="button-small" @onclick="() => itemService.New(ItemType.Consumable)">new consumable</button>
+                            <button class="button-small" @onclick="() => itemService.New(ItemType.Book)">new book</button>
+                            <button class="button-small" @onclick="() => itemService.New(ItemType.Material)">new material</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+
+        <!-- Players -->
+        <fieldset>
+            <legend>Players</legend>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var player in playerService.All())
+                    {
+                        <tr>
+                            <td class="form-xlarge"><input type="text" @bind="player.Id" /></td>
+                            <td><input type="text" @bind="player.Name" /></td>
+                            <td class="form-medium">
+                                <button class="button-small" @onclick="() => playerService.Remove(player)">delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5"><button class="button-small" @onclick="() => playerService.New()">new</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+
+        <!-- Enemies -->
+        <fieldset>
+            <legend>Enemies</legend>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var enemy in enemyService.All())
+                    {
+                        <tr>
+                            <td class="form-xlarge"><input type="text" @bind="enemy.Id" /></td>
+                            <td><input type="text" @bind="enemy.Name" /></td>
+                            <td class="form-medium">
+                                <button class="button-small" @onclick="() => enemyService.Remove(enemy)">delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5"><button class="button-small" @onclick="() => enemyService.New()">new</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+
+        <!-- NPCs -->
+        <fieldset>
+            <legend>NPCs</legend>
+            <table class="table-condensed">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var npc in npcService.All())
+                    {
+                        <tr>
+                            <td class="form-xlarge"><input type="text" @bind="npc.Id" /></td>
+                            <td><input type="text" @bind="npc.Name" /></td>
+                            <td class="form-medium">
+                                <button class="button-small" @onclick="() => npcService.Remove(npc)">delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5"><button class="button-small" @onclick="() => npcService.New()">new</button></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </fieldset>
+    </div>
+</div>
+
+@code {
+    private Map Map { get; set; }
+    private enum DrawMode { Pen, Line, Rectangle, Fill, Copy, Remove };
+    private DrawMode Mode { get; set; }
+    private int SelectedTileIndex = 831;
+    private Timer AutoSaveTimer;
+    private bool EnableAutoSave = true;
+    private int Layer = 0;
+
+    protected override void OnInitialized()
+    {
+        AutoSaveTimer = new Timer();
+        AutoSaveTimer.Interval = 1000 * 60;
+        AutoSaveTimer.Elapsed += AutoSave;
+        AutoSaveTimer.AutoReset = true;
+        AutoSaveTimer.Start();
+        base.OnInitialized();
+    }
+
+    void OnTileChanged(int index)
+    {
+        // Called from child component, so we need to notify 
+        // the parent that the state has changed.
+        SelectedTileIndex = index;
+        StateHasChanged();
+    }
+
+    private void Save()
+    {
+        mapService.Save();
+        itemService.Save();
+        npcService.Save();
+        enemyService.Save();
+        playerService.Save();
+    }
+
+    private void OpenMap(Map map)
+    {
+        Map = map;
+    }
+
+    private void SetMode(DrawMode mode)
+    {
+        Mode = mode;
+    }
+    
+    private void SetLayer(int layer)
+    {
+        Layer = layer;
+    }
+
+    private void AutoSave(object sender, EventArgs args)
+    {
+        if(EnableAutoSave)
+        {
+            Save();
+        }
+    }
+
+    private void KeyboardHandler(KeyboardEventArgs args)
+    {
+        if(args.CtrlKey && args.Key == "s")
+        {
+            Save();
+        }
+    }
+}

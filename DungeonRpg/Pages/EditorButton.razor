@@ -1,0 +1,25 @@
+﻿@if(Active)
+{
+    <button class="button-stretch button-small button-active">@Text</button>
+}
+else 
+{
+    <button class="button-stretch button-small" @onclick="(args) => Click(args)">@Text</button>
+}
+
+@code {
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public bool Active { get; set; }
+
+    private void Click(MouseEventArgs args)
+    {
+        OnClickCallback.InvokeAsync(args);
+    }
+}

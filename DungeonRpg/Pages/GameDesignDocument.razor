@@ -1,0 +1,280 @@
+﻿@page "/docs"
+
+    <div style="max-width: 650px; margin: auto; margin-top: 80px;">
+
+        <h1>RPG Design Document</h1>
+        <p>
+            This RPG game is text-based (supported by minor graphics) RPG game which is played in the browser. 
+            The goal of the game is to advance the character with experience, better items, and equipment.
+        </p>
+        <p>
+            The game is single-player, and is player in the browser. Should this be multiplayer?
+        </p>
+
+        <section>
+            <h2>Character</h2>
+            <p>
+                A character is defined by his/her attributes and equipment. The combination
+                of these two will determine how combate evolves.
+            </p>
+            <p>
+                The characters in the game are highly customizable in the following areas:
+            </p>
+            <ul>
+                <li>Different kind of races</li>
+                <li>Both genders: male/female</li>
+                <li>All weapons and armor are shown</li>
+            </ul>
+            <p>Some races also have different skin tones available.</p>
+
+            <h3>Races</h3>
+            <p>
+                At the beginning of the game, there are four different available races.
+                There are more 2D models available for other races.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Race</td>
+                        <td>2D Model</td>
+                        <td>Racial bonus</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Human</td>
+                        <td>
+                            <div class="tile tile-1118"></div>
+                            <div class="tile tile-1119"></div>
+                        </td>
+                        <td>Earn 10% more gold from combat, and chests.</td>
+                    </tr>
+                    <tr>
+                        <td>Elf</td>
+                        <td>
+                            <div class="tile tile-1138"></div>
+                            <div class="tile tile-1139"></div>
+                        </td>
+                        <td>Intelligence is increased by 4.</td>
+                    </tr>
+                    <tr>
+                        <td>Orc</td>
+                        <td>
+                            <div class="tile tile-1113"></div>
+                            <div class="tile tile-1114"></div>
+                        </td>
+                        <td>Strength is increased by 4.</td>
+                    </tr>
+                    <tr>
+                        <td>Draconian</td>
+                        <td>
+                            <div class="tile tile-1115"></div>
+                            <div class="tile tile-1116"></div>
+                        </td>
+                        <td>Dexterity is increased by 4.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Which gender? Which race? Classes? Attributes?</p>
+
+            <h3>Attributes</h3>
+            <p>
+                A character is defined by the following attributes:
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Attribute</td>
+                        <td>Description</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Strength</td>
+                        <td>Determines how much damage is dealt, and inventory capacity.</td>
+                    </tr>
+                    <tr>
+                        <td>Dexterity</td>
+                        <td>Determines how likely a crit is to occur.</td>
+                    </tr>
+                    <tr>
+                        <td>Constitution</td>
+                        <td>Determines the number of hitpoints.</td>
+                    </tr>
+                    <tr>
+                        <td>Intelligence</td>
+                        <td>Determines how much magic damage is dealt.</td>
+                    </tr>
+                    <tr>
+                        <td>Wisdom</td>
+                        <td>Determines how much mana the player has.</td>
+                    </tr>
+                    <tr>
+                        <td>Memory</td>
+                        <td>Determines how many skills, and knowledge a player can learn.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Classes</h3>
+            <p>
+                The game does not have any classes. A player is also allowed to learn every possible skills.
+                Weapons give damage or magic damage, which is increased by strength/intelligence. 
+            </p>
+            <p>
+                This will lead to interesting characters, but also the ability to break a character.
+                It should be possible to rebalance the attributes.
+            </p>
+
+        </section>
+
+        <section>
+            <h2>Civil</h2>
+            <p>
+                Civil attributes allow for various other activities for a player. 
+                Most of these activities will help a player to earn gold.
+            </p>
+            <p>
+                A player will get 1 civil point for each two levels. 
+                The maximum level for a civil attribute is level 5.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Civil</td>
+                        <td>Description</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bartering</td>
+                        <td>Better shop prices for buying and selling.</td>
+                    </tr>
+                    <tr>
+                        <td>Loremaster</td>
+                        <td>Identify high level items and see monster information.</td>
+                    </tr>
+                    <tr>
+                        <td>Thieving</td>
+                        <td>Pickpocket from NPCs.</td>
+                    </tr>
+                    <tr>
+                        <td>Luck</td>
+                        <td>Better loot from chests.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Inventory</h2>
+            <p>
+                The inventory holds all the players' items. The inventory allows for
+                the following actions: use, equip, discard, etc.
+            </p>
+            <p>
+                A player will be able to carry a certain amount of different items based on
+                the players' strength.
+            </p>
+        </section>
+
+        <section>
+            <h2>Items</h2>
+            <p>Which kind of items are there? How is value determined? How are items obtained? How are items sold?</p>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Item</td>
+                        <td>Description</td>
+                        <td>2D Model</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gold</td>
+                        <td>Used as game currency.</td>
+                        <td><div class="tile tile-1605"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Equipment</h2>
+            <p>Which types of equipment are there? How strong is the equipment? How is damage/defense determined? How is equipment enchanted?</p>
+
+        </section>
+
+        <section>
+            <h2>Skills</h2>
+            <p>Which skills are there? Is the skill a combat skill, magic skill, or a buff?</p>
+            <p>
+                A skill will do combat or magic damage. This damage is increased by the attributes and equipment.
+                This means that if a player is built for combat damage, and uses a magic damage weapon, then this will
+                be sub-par to a player that is build for magic damage.
+            </p>
+            <p>
+                A skill has a certain amount of turn cooldown. During this time the skill cannot be used.
+            </p>
+            <p>
+                A magic skill will consume mana. It is important for magic based characters to
+                bring mana potions with them.
+            </p>
+            <h3>Combat skills</h3>
+            There are the following combat skills:
+
+            <h3>Magic skills</h3>
+            There are the following magic skills:
+        </section>
+
+        <section>
+            <h2>Effects</h2>
+            <p>How does the effect (buff) system work?</p>
+        </section>
+
+        <section>
+            <h2>Log</h2>
+            <p>What is the log output? Which kinds of log output are there?</p>
+        </section>
+
+        <section>
+            <h2>Map</h2>
+            <p>How does the map work? Map objects vs. world objects.</p>
+        </section>
+
+        <section>
+            <h2>NPCs</h2>
+            <p>What are NPC's? How can you interact with NPCs? How does the dialog system work?</p>
+        </section>
+
+        <section>
+            <h2>Enemies</h2>
+            <p>Which enemies are there? How strong are they?</p>
+        </section>
+
+        <section>
+            <h2>Combat</h2>
+            <p>How does the combat system work? How do dungeons work?</p>
+        </section>
+
+        <section>
+            <h2>Crafting</h2>
+            <p>How does the crafting system work? How are recipes acquired? How is equipment crafted? Which skills are required? How to obtain materials?</p>
+        </section>
+
+        <section>
+            <h2>Quests</h2>
+            <p>How does the quest system work?</p>
+        </section>
+
+        <section>
+            <h2>Shops</h2>
+            <p>Which items are sold? How does one interact with a shop?</p>
+        </section>
+
+        <section>
+            <h2>Learning</h2>
+            <p>How does a player learn new skills? How does the learning system work?</p>
+        </section>
+
+    </div>

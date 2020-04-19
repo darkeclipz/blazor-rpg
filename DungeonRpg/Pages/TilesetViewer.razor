@@ -1,0 +1,57 @@
+﻿@inject ComponentService componentService 
+
+<div>
+    @foreach(var tile in Tiles)
+    {
+        if(TileIndex == tile.Index)
+        {
+            <div class="tile tile-@(tile.Index) selected-tile" style="float: left;" data-toggle="tooltip" 
+                title="@tile.Index" @onclick="() => Select(tile)">
+            </div>
+        }
+        else 
+        {
+            <div class="tile tile-@(tile.Index)" style="float: left;" data-toggle="tooltip" 
+                title="@tile.Index" @onclick="() => Select(tile)">
+            </div>
+        }
+    }    
+</div>
+
+@code {
+    [Parameter]
+    public int TileIndex { get; set; }
+
+    [Parameter]
+    public Action<int> TileChanged { get; set; }
+
+    private (int width, int height) TilesetDimensions = (2048, 3744);
+    private int TotalTiles { get => TilesetDimensions.width * TilesetDimensions.height / (32 * 32); }
+    private IList<Tile> Tiles;
+
+    protected override void OnInitialized()
+    {
+        Tiles = new List<Tile>();
+        for(int i=0; i < TotalTiles; i++)
+        {
+            var tile = new Tile
+            {
+                Index = i
+            };
+
+            Tiles.Add(tile);
+        }
+        base.OnInitialized();
+    }
+
+    private void Select(Tile tile)
+    {
+        TileIndex = tile.Index;
+        TileChanged?.Invoke(TileIndex);
+    }
+
+    private struct Tile
+    {
+        public int Index;
+    }
+}

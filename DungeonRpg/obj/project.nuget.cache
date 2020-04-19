@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "13U4efzBZsKKv4zHclNgqTL72H5owT7lYXZ6rObUcE1GgZRVPVHTUMw3aUUrgB8hz743s+4Wlw1I/+kzuUjIcA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Isomorphism\\Documents\\Repos\\DungeonRpg\\DungeonRpg\\DungeonRpg.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

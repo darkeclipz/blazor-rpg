@@ -1,0 +1,223 @@
+/* General */
+
+body {
+    font-family: 'Metamorphous';
+    font-size: 10pt;
+    color: #eee;
+    background-color: #000
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fondamento';
+}
+
+/* Tables */
+
+table {
+    border-collapse: true;
+    width: 100%;
+}
+
+table, th, td {
+    padding: 4px 8px;
+    border: 1px #666 solid;
+}
+
+.table-borderless, .table-bordered th, .table-bordered-td {
+    border: 0;
+}
+
+table thead tr:first-child {
+    font-weight: bold;
+}
+
+.table-condensed {
+    font-size: 8pt;
+}
+
+.table-condensed th, .table-condensed td {
+    padding: 2px 4px;
+}
+
+/* Forms */
+
+input {
+    background-color: #333;
+    color: #ddd;
+}
+
+input[type=text], input[type=number] {
+    border: 1px #888 solid;
+    padding: 4px 8px;
+}
+
+button, .button {
+    border: 1px #888 solid;
+    padding: 4px 8px;
+    background-color: #ccc;
+}
+
+.button-danger {
+    color: red;
+    border: 1px red solid;
+}
+
+.button-stretch {
+    width: 100%;
+    display: block;
+}
+
+button:hover {
+    background-color: #aaa;
+}
+
+.button-small {
+    font-size: 8pt;
+    padding: 2px 4px;
+}
+
+p {
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+/* Editor */
+
+.editor {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #111100;
+    font-family: 'Open Sans';
+}
+
+.editor button {
+    background-color: #444;
+    margin: 2px 3px;
+    border-radius: 3px;
+    border: 1px #888 solid;
+    margin: 2px 0;
+    color: #ddd;
+}
+
+.editor button:hover {
+    background-color: #555;
+}
+
+.editor .button-active {
+    border: 2px red solid;
+}
+
+.editor input[type=number] {
+    width: 80px;
+}
+
+.form-small {
+    width: 40px;
+}
+
+.form-medium {
+    width: 80px;
+}
+
+.form-large {
+    width: 160px;
+}
+
+.form-xlarge {
+    width: 240px;
+}
+
+.form-xxlarge {
+    width: 300px;
+}
+
+.editor input {
+    font-size: 8pt;
+    border: 0;
+    background-color: #444;
+    border-radius: 3px; 
+    padding: 2px 3px;
+}
+
+.editor table input {
+    width: 100%;
+}
+
+.editor table button {
+    font-size: 7pt;
+}
+
+.editor-toolbar {
+    width: 200px;
+    height: 100%;
+    float: left;
+    background-color: #333;
+    overflow-y: auto;
+}
+
+.editor-toolbar table {
+    width: 100%;
+}
+
+.editor-toolbar table, .editor-toolbar th, .editor-toolbar td {
+    border: 0;
+}
+
+.editor-panel {
+    width: 800px;
+    height: 100%;
+    float: left;
+    background-color: #333;
+    border-left: 2px #666 solid;
+    border-right: 2px #666 solid;
+}
+
+.editor-properties {
+    width: calc(100% - 1004px);
+    float: left;
+    height: 100%;
+    background-color: #333;
+    padding: 8px;
+}
+
+.map-panel {
+    width: 100%;
+    height: 800px;
+    background-color: black;
+}
+
+.tile-panel {
+    width: 100%;
+    height: calc(100% - 802px);
+    overflow-y: auto;
+    border-top: 2px #666 solid;
+    background: url('/images/checker-mini.png') repeat top left scroll;
+}
+
+fieldset {
+  display: block;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding-top: 0.35em;
+  padding-bottom: 0.625em;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  border: 1px groove #777;
+  margin: 4px 8px;
+  border-radius: 2px;
+}
+
+fieldset legend {
+    font-size: 10pt;
+    margin-bottom: 2px;
+}
+
+.selected-tile {
+    border: 2px red solid;
+}
+
+hr {
+    border-bottom: 1px #888 solid;
+    height: 1px;
+}
