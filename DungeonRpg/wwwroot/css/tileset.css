@@ -1,4 +1,4 @@
-.tile { width: 32px; height: 32px; background-image: url("/tiles/tileset.png"); }
+.tile { width: 31.5px; height: 31.5px; background-image: url("/tiles/tileset.png"); }
 .tile-0 { background-position: -0px -0px; }
 .tile-1 { background-position: -32px -0px; }
 .tile-2 { background-position: -64px -0px; }

@@ -182,37 +182,7 @@ The user interface components are found in the following sections.
 
 This is an example of how a map would look:
 
-<div class="map">
-    @for (int y = 0; y < 17; y++)
-    {
-        <div class="map-row">
-            @for (int x = 0; x < 17; x++)
-            {
-                <div class="map-tile">
-                    <div class="map-tile-layer">
-                        <div class="tile tile-2305"></div>
-                    </div>
-                    @foreach (var worldObjects in WorldObjects.Where(wo => wo.Position.X == x && wo.Position.Y == y))
-                    {
-                        <div class="map-tile-layer">
-                            <div class="tile tile-@worldObjects.TileId world-object" data-toggle="tooltip" title="@worldObjects.Name"></div>
-                        </div>
-                    }
-                    @if (CanMove((x, y)))
-                    {
-                        <div class="map-tile-layer">
-                            <div class="tile walkable" @onclick="() => MoveTo(x, y)"></div>
-                        </div>
-                    }
-                    @*<div class="map-tile-layer" style="color: white">
-                            (@x, @y)
-                        </div>*@
-                </div>
-            }
-        </div>
-    }
-    <div style="clear: both;"></div>
-</div>
+
 
 <input type="text" @bind="Message" @onkeyup="Command" />
 <br />

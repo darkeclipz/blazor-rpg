@@ -89,19 +89,29 @@ p {
     position: absolute;
     background-color: #111100;
     font-family: 'Open Sans';
+    font-size: 8pt;
 }
 
 .editor button {
     background-color: #444;
     margin: 2px 3px;
     border-radius: 3px;
-    border: 1px #888 solid;
     margin: 2px 0;
     color: #ddd;
+    border: 0;
+}
+
+.button-nav {
+    width: 38px;
+    height: 38px;
 }
 
 .editor button:hover {
-    background-color: #555;
+    background-color: #666;
+}
+
+.editor button:active {
+    background-color: #777;
 }
 
 .editor .button-active {
@@ -154,6 +164,8 @@ p {
     float: left;
     background-color: #333;
     overflow-y: auto;
+    z-index: 10;
+    border-right: 2px #666 solid;
 }
 
 .editor-toolbar table {
@@ -169,8 +181,6 @@ p {
     height: 100%;
     float: left;
     background-color: #333;
-    border-left: 2px #666 solid;
-    border-right: 2px #666 solid;
 }
 
 .editor-properties {
@@ -179,6 +189,8 @@ p {
     height: 100%;
     background-color: #333;
     padding: 8px;
+    z-index: 10;
+    border-left: 2px #666 solid;
 }
 
 .map-panel {
@@ -220,4 +232,34 @@ fieldset legend {
 hr {
     border-bottom: 1px #888 solid;
     height: 1px;
+}
+
+/* Map */
+
+.map {
+    width: 800px;
+    height: 800px;
+    overflow: hidden;
+}
+
+.map-row {
+    clear: both;
+}
+
+.map-tile {
+    width: 31.5px;
+    height: 31.5px;
+    float: left;
+    font-size: 6pt;
+    overflow: hidden;
+}
+
+.map-tile-layer {
+    position: absolute;
+    z-index: 2;
+}
+
+.map-tile-layer .tile:hover {
+    box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.33) inset;
+    cursor: pointer;
 }

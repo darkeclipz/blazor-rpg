@@ -89,7 +89,7 @@ namespace DungeonRpg
         public int Width { get; set; }
         public int Height { get; set; }
         private int[,,] Data { get; set; }
-        private const int Layers = 6;
+        public const int Layers = 6;
 
         public Map()
         {
@@ -116,12 +116,40 @@ namespace DungeonRpg
 
         public int this[int layer, int x, int y]
         {
-            get => (x < 0 || x >= Width || y < 0 || y >= Height) ? 0 : Data[layer, x, y];
+            get
+            {
+                try
+                {
+                    if (x < 0 || x >= Width || y < 0 || y >= Height)
+                    {
+                        return 4839; // Red cross tile
+                    }
+                    else
+                    {
+                        return Data[layer, x, y];
+                    }
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
             set
             {
                 if (x >= 0 && x < Width && y >= 0 && y < Height)
                 {
                     Data[layer, x, y] = value;
+                }
+            }
+        }
+
+        public void FillLayer(int layer, int tileId)
+        {
+            for(int x = 0; x < Width; x++)
+            {
+                for(int y = 0; y < Height; y++)
+                {
+                    this[layer, x, y] = tileId;
                 }
             }
         }
@@ -253,6 +281,8 @@ namespace DungeonRpg
             map.Width = 16;
             map.Height = 16;
             map.Resize();
+            int grassTileId = 959;
+            map.FillLayer(0, grassTileId);
             return map;
         }
 

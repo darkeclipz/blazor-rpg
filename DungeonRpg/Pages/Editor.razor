@@ -7,13 +7,23 @@
 @inject PlayerService playerService
 @using System.Timers 
 
-<div class="editor" @onkeyup="KeyboardHandler">
+<div class="editor">
     <div class="editor-toolbar">
         <fieldset>
             <legend>File</legend>
             @if (Map != null)
             {
-                <b>@Map.Description</b>
+                <b>@Map.Name</b> <br />
+                <span>@Map.Description</span> <br />
+                <span><b>Size:</b> @Map.Width x @Map.Height</span> <br />
+                @if (LastSaveTime != DateTime.MinValue)
+                {
+                    <span><b>Last save:</b> @LastSaveTime</span>
+                }
+                else if(Map != null)
+                {
+                    <b>Not saved</b>
+                }
             }
             else
             {
@@ -21,7 +31,7 @@
             }
             <button class="button-stretch button-small" @onclick="() => OpenMap(mapService.New())">New</button>
             <button class="button-stretch button-small" @onclick="Save">Save</button>
-            <input type="checkbox" @bind="EnableAutoSave"/> Auto-save
+            <input type="checkbox" @bind="EnableAutoSave" /> Auto-save
         </fieldset>
         <fieldset>
             <legend>Tools</legend>
@@ -51,10 +61,23 @@
         </fieldset>
         <fieldset>
             <legend>Nav</legend>
-            <button class="button-stretch button-small">Up</button>
-            <button class="button-stretch button-small">Down</button>
-            <button class="button-stretch button-small">Left</button>
-            <button class="button-stretch button-small">Right</button>
+            <table class="table-borderless">
+                <tr>
+                    <td></td>
+                    <td><button class="button-stretch button-small button-nav" @onclick="() => Move(0, -5)">Up</button></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><button class="button-stretch button-small button-nav" @onclick="() => Move(-5, 0)">Left</button></td>
+                    <td><button class="button-stretch button-small button-nav" @onclick="() => Move(-Position.X, -Position.Y)">Reset</button></td>
+                    <td><button class="button-stretch button-small button-nav" @onclick="() => Move(5, 0)">Right</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button class="button-stretch button-small button-nav" @onclick="() => Move(0, 5)">Down</button></td>
+                    <td></td>
+                </tr>
+            </table>
         </fieldset>
         <p style="font-size: 85%; color: #999; text-align: center;">
             RPG Editor v0.1 (alpha)
@@ -62,7 +85,37 @@
     </div>
     <div class="editor-panel">
         <div class="map-panel">
-            map
+            <div class="map">
+                @if (Map != null)
+                {
+                    for (int y = 0; y < 25; y++)
+                    {
+                        <div class="map-row">
+                            @for (int x = 0; x < 25; x++)
+                            {
+                                (int x, int y) position = (x + Position.X, y + Position.Y);
+                                <div class="map-tile" @onclick="() => Click(position)" @onkeydown="KeyboardHandler">
+                                    @for (int layer = 0; layer < Map.Layers; layer++)
+                                    {
+                                        var tileId = Map[layer, position.x, position.y];
+                                        if (tileId != 0)
+                                        {
+                                            <div class="map-tile-layer">
+                                                <div class="tile tile-@tileId"></div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No map data</p>
+                }
+                <div style="clear: both;"></div>
+            </div>
         </div>
         <div class="tile-panel">
             <TilesetViewer TileIndex="SelectedTileIndex" TileChanged="OnTileChanged" />
@@ -91,7 +144,7 @@
                             <td><input type="text" @bind="map.Description" /></td>
                             <td class="form-small"><input type="text" @bind="map.Width" /></td>
                             <td class="form-small"><input type="text" @bind="map.Height" /></td>
-                            <td class="form-xlarge">
+                            <td class="form-large">
                                 <button class="button-small" @onclick="() => OpenMap(map)">open</button>
                                 <button class="button-small" @onclick="() => map.Resize()">resize</button>
                                 <button class="button-small" @onclick="() => mapService.Remove(map)">delete</button>
@@ -254,10 +307,12 @@
     private Map Map { get; set; }
     private enum DrawMode { Pen, Line, Rectangle, Fill, Copy, Remove };
     private DrawMode Mode { get; set; }
-    private int SelectedTileIndex = 831;
+    private int SelectedTileIndex = 951;
     private Timer AutoSaveTimer;
     private bool EnableAutoSave = true;
     private int Layer = 0;
+    private (int X, int Y) Position = (0, 0);
+    private DateTime LastSaveTime = DateTime.MinValue;
 
     protected override void OnInitialized()
     {
@@ -284,6 +339,7 @@
         npcService.Save();
         enemyService.Save();
         playerService.Save();
+        LastSaveTime = DateTime.Now;
     }
 
     private void OpenMap(Map map)
@@ -295,7 +351,7 @@
     {
         Mode = mode;
     }
-    
+
     private void SetLayer(int layer)
     {
         Layer = layer;
@@ -315,5 +371,29 @@
         {
             Save();
         }
+    }
+
+    private void Click((int x, int y) position)
+    {
+        switch(Mode)
+        {
+            case DrawMode.Pen:
+                Map[Layer, position.x, position.y] = SelectedTileIndex;
+                break;
+            case DrawMode.Remove:
+                Map[Layer, position.x, position.y] = 0;
+                break;
+            case DrawMode.Copy:
+                SelectedTileIndex = Map[Layer, position.x, position.y];
+                Mode = DrawMode.Pen;
+                break;
+        }
+    }
+
+    private void Move(int x, int y)
+    {
+        Position.X += x;
+        Position.Y += y;
+        StateHasChanged();
     }
 }
