@@ -34,6 +34,9 @@ namespace DungeonRpg
         public int Memory { get; set; }
     }
 
+    public enum Gender { Male, Female }
+    public enum Race { Human, Elf, Orc, Draconian }
+
     public abstract class Entity
     {
         public Guid Id { get; set; }
@@ -46,7 +49,10 @@ namespace DungeonRpg
 
     public abstract class Character : Entity { }
     public class Enemy : Character, IKey<Enemy> { }
-    public class Player : Character, IKey<Player> { }
+    public class Player : Character, IKey<Player>
+    {
+        public string Password { get; internal set; }
+    }
     public class Npc : Character, IKey<Npc> { }
 
     // Item Classes
@@ -268,7 +274,13 @@ namespace DungeonRpg
             };
     }
 
-    public class PlayerService : Service<Player> { }
+    public class PlayerService : Service<Player>
+    {
+        public Player FindByName(string username)
+        {
+            return Entities.FirstOrDefault(entity => entity.Name.ToLower() == username.ToLower());
+        }
+    }
     public class NpcService : Service<Npc> { }
     public class SkillService : Service<Skill> { }
     public class EnemyService : Service<Enemy> { }

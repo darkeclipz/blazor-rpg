@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DungeonRpg.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace DungeonRpg
 {
@@ -28,6 +30,10 @@ namespace DungeonRpg
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddHttpContextAccessor();
+            services.AddScoped<HttpContextAccessor>();
+            
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ComponentService>();
             services.AddSingleton<ItemService>();
@@ -56,11 +62,15 @@ namespace DungeonRpg
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

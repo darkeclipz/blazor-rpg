@@ -444,55 +444,6 @@
       },
       {
         "Kind": "Components.Component",
-        "Name": "DungeonRpg.Pages.Editor",
-        "AssemblyName": "DungeonRpg",
-        "Documentation": null,
-        "TagOutputHint": null,
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "Editor",
-            "ParentTag": null,
-            "TagStructure": 0,
-            "Attributes": [],
-            "Diagnostics": []
-          }
-        ],
-        "BoundAttributes": [],
-        "AllowedChildTags": [],
-        "Diagnostics": [],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "DungeonRpg.Pages.Editor"
-        }
-      },
-      {
-        "Kind": "Components.Component",
-        "Name": "DungeonRpg.Pages.Editor",
-        "AssemblyName": "DungeonRpg",
-        "Documentation": null,
-        "TagOutputHint": null,
-        "CaseSensitive": true,
-        "TagMatchingRules": [
-          {
-            "TagName": "DungeonRpg.Pages.Editor",
-            "ParentTag": null,
-            "TagStructure": 0,
-            "Attributes": [],
-            "Diagnostics": []
-          }
-        ],
-        "BoundAttributes": [],
-        "AllowedChildTags": [],
-        "Diagnostics": [],
-        "Metadata": {
-          "Runtime.Name": "Components.IComponent",
-          "Common.TypeName": "DungeonRpg.Pages.Editor",
-          "Components.NameMatch": "Components.FullyQualifiedNameMatch"
-        }
-      },
-      {
-        "Kind": "Components.Component",
         "Name": "DungeonRpg.Pages.TilesetViewer",
         "AssemblyName": "DungeonRpg",
         "Documentation": null,

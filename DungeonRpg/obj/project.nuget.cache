@@ -1,9 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "13U4efzBZsKKv4zHclNgqTL72H5owT7lYXZ6rObUcE1GgZRVPVHTUMw3aUUrgB8hz743s+4Wlw1I/+kzuUjIcA==",
+  "dgSpecHash": "J5VKCfxwF7Tiy+n3M0qDmPT+nYA7Y+OLgnziCbY/lQacb0lGaqU+OBHwhh+1eLH8W3bE/OEj2UwP3NE48c44OQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Isomorphism\\Documents\\Repos\\DungeonRpg\\DungeonRpg\\DungeonRpg.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\microsoft.aspnetcore.authorization\\3.1.3\\microsoft.aspnetcore.authorization.3.1.3.nupkg.sha512",
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\microsoft.aspnetcore.metadata\\3.1.3\\microsoft.aspnetcore.metadata.3.1.3.nupkg.sha512",
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\3.1.3\\microsoft.extensions.dependencyinjection.abstractions.3.1.3.nupkg.sha512",
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.3\\microsoft.extensions.logging.abstractions.3.1.3.nupkg.sha512",
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\microsoft.extensions.options\\3.1.3\\microsoft.extensions.options.3.1.3.nupkg.sha512",
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.3\\microsoft.extensions.primitives.3.1.3.nupkg.sha512",
     "C:\\Users\\Isomorphism\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],
   "logs": []

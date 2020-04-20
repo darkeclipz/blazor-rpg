@@ -1,5 +1,58 @@
 ﻿@page "/"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager 
 
-<h1>RPG Game</h1>
+<h1 style="text-align: center;">RPG Game</h1>
+
+<div style="max-width: 800px; margin: auto;">
+    <div style="width: 400px; float: left;">
+        <AuthorizeView>
+            <Authorized>
+                <p>You are already logged in <b>@Username</b>.</p> <br />
+                <a href="/api/User/logout">Logout</a>
+            </Authorized>
+            <NotAuthorized>
+                <Login />
+                @if(ErrorMessage.Length > 0)
+                {
+                    <p>@ErrorMessage</p>
+                }
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+    <div style="width: 400px; float: left;">
+        <Register />
+    </div>
+    <div style="clear: both;"></div>
+</div>
 
 <a href="register">Register</a> | <a href="login">Login</a> | <a href="Editor">Editor</a> | <a href="docs">Game Design Document</a>
+
+@code {
+    [Parameter]
+    public string ErrorMessage { get; set; } = String.Empty;
+    private string Username { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        {
+            Username = httpContextAccessor.HttpContext.User.Identity.Name;
+        }
+
+        var uri = new UriBuilder(navigationManager.Uri);
+        var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        if(queryParams.AllKeys.Count(k => k == "errormessage") > 0)
+        {
+            ErrorMessage = queryParams["errormessage"];
+        }
+
+        base.OnInitialized();
+    }
+}  
