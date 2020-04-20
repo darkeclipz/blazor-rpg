@@ -407,6 +407,9 @@
                 SelectedTileIndex = Map[Layer, position.x, position.y];
                 Mode = DrawMode.Pen;
                 break;
+            case DrawMode.Fill:
+                Map.FloorFill(Layer, position.x, position.y, SelectedTileIndex);
+                break;
         }
     }
 

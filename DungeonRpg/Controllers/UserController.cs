@@ -15,11 +15,11 @@ namespace DungeonRpg.Controllers
     [ApiController]
     public class UserController : Controller
     {
-        private PlayerService playerService { get; set; }
+        private PlayerService PlayerService { get; set; }
 
         public UserController(IServiceProvider provider)
         {
-            playerService = provider.GetService<PlayerService>();
+            PlayerService = provider.GetService<PlayerService>();
         }
 
         // /api/User/GetUser
@@ -50,7 +50,7 @@ namespace DungeonRpg.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
-            var player = playerService.FindByName(model.Username);
+            var player = PlayerService.FindByName(model.Username);
             if (player != null && player.Password == model.Password)
             {
                 try
@@ -75,11 +75,10 @@ namespace DungeonRpg.Controllers
                 try
                 {
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
                 }
-                catch (Exception ex)
+                catch
                 {
-                    return BadRequest("Failed to login.");
+                    return Redirect("/?errormessage=Failed%20to%20login");
                 }
 
                 return Redirect("/");
@@ -93,7 +92,7 @@ namespace DungeonRpg.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Register([FromForm] RegisterModel model)
         {
-            var player = playerService.New();
+            var player = PlayerService.New();
             player.Name = model.Username;
             player.Password = model.Password;
 
@@ -105,10 +104,10 @@ namespace DungeonRpg.Controllers
             { }
 
             var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, player.Name),
-                    new Claim(ClaimTypes.Role, "Administrator")
-                };
+            {
+                new Claim(ClaimTypes.Name, player.Name),
+                new Claim(ClaimTypes.Role, "Administrator")
+            };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var authProperties = new AuthenticationProperties
@@ -119,9 +118,8 @@ namespace DungeonRpg.Controllers
             try
             {
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
             }
-            catch (Exception ex)
+            catch 
             {
                 return BadRequest("Failed to login.");
             }
@@ -142,7 +140,6 @@ namespace DungeonRpg.Controllers
             return Redirect("/");
         }
     }
-
 
     public class LoginModel
     {

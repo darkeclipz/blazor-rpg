@@ -126,7 +126,7 @@ namespace DungeonRpg
             {
                 try
                 {
-                    if (x < 0 || x >= Width || y < 0 || y >= Height)
+                    if (!IsInRegion(x, y))
                     {
                         return 4839; // Red cross tile
                     }
@@ -142,13 +142,15 @@ namespace DungeonRpg
             }
             set
             {
-                if (x >= 0 && x < Width && y >= 0 && y < Height)
+                if (IsInRegion(x, y))
                 {
                     Data[layer, x, y] = value;
                 }
             }
         }
 
+        private bool IsInRegion(int x, int y) => !(x < 0 || x >= Width || y < 0 || y >= Height);
+        
         public void FillLayer(int layer, int tileId)
         {
             for(int x = 0; x < Width; x++)
@@ -156,6 +158,31 @@ namespace DungeonRpg
                 for(int y = 0; y < Height; y++)
                 {
                     this[layer, x, y] = tileId;
+                }
+            }
+        }
+
+        public void FloorFill(int layer, int x, int y, int tileId)
+        {
+            var floodTileId = Data[layer, x, y];
+            var unvisited = new Queue<(int x, int y)>();
+            unvisited.Enqueue((x, y));
+            var visited = new bool[Width, Height];
+            while(unvisited.Count > 0)
+            {
+                var current = unvisited.Dequeue();
+                visited[current.x, current.y] = true;
+                Data[layer, current.x, current.y] = tileId;
+
+                foreach (var neighbour in new List<(int x, int y)> { (1, 0), (0, 1), (-1, 0), (0, -1) })
+                {
+                    (int x, int y) adjacent = (current.x + neighbour.x, current.y + neighbour.y);
+                    if (IsInRegion(adjacent.x, adjacent.y)
+                        && !visited[adjacent.x, adjacent.y]
+                        && Data[layer, adjacent.x, adjacent.y] == floodTileId)
+                    {
+                        unvisited.Enqueue(adjacent);
+                    }
                 }
             }
         }
@@ -230,8 +257,10 @@ namespace DungeonRpg
 
         protected JsonSerializerSettings GetSerializerSettings()
         {
-            var settings = new JsonSerializerSettings();
-            settings.TypeNameHandling = TypeNameHandling.All;
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            };
             return settings;
         }
 
