@@ -124,6 +124,7 @@ namespace DungeonRpg.Controllers
                 return BadRequest("Failed to login.");
             }
 
+            PlayerService.Save();
             return Redirect("/");
         }
 

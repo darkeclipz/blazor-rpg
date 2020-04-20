@@ -24,7 +24,7 @@ namespace DungeonRpg
     public class TeleportAction : Action { }
 
     // Entity Classes
-    public struct Attributes
+    public class Attributes
     {
         public int Strength { get; set; }
         public int Dexterity { get; set; }
@@ -57,11 +57,18 @@ namespace DungeonRpg
 
     // Item Classes
     public enum ItemType { Weapon, Armor, Jewelry, Consumable, Material, Book, Item }
+    public enum ItemGrade { Common, Rare, Unique, Legendary }
     public class Item : IKey<Item>
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public int Value { get; set; }
+        public int Level { get; set; }
+        public int TileId { get; set; }
+        public ItemGrade Grade { get; set; }
+        public bool Discardable { get; set; } = true;
+        public bool Sellable { get; set; } = true;
         public static ItemType GetItemType(Item item)
         {
             if (item is Weapon) return ItemType.Weapon;
@@ -74,10 +81,36 @@ namespace DungeonRpg
         }
     }
 
-    public abstract class Equipment : Item { }
-    public class Armor : Equipment { }
-    public class Weapon : Equipment { }
-    public class Jewelry : Equipment { }
+    public abstract class Equipment : Item 
+    {
+        public Attributes AttributesRequired { get; set; } = new Attributes();
+        public int EnchantmentLevel { get; set; }
+        public int EquippedTileId { get; set; }
+    }
+
+    public enum ArmorType { Shield, Headwear, Body, Gloves, Boots }
+    public class Armor : Equipment 
+    { 
+        public ArmorType ArmorType { get; set; }
+        public int Defense { get; set; }
+    }
+
+    public enum WeaponType { OneHanded, TwoHanded };
+    public enum DamageType { Physical, Magic };
+    public class Weapon : Equipment 
+    { 
+        public WeaponType WeaponType { get; set; }
+        public DamageType DamageType { get; set; }
+        public int MinDamage { get; set; }
+        public int MaxDamage { get; set; }
+    }
+
+    public enum JewelryType { Necklace, Ring, Earring }
+    public class Jewelry : Equipment 
+    { 
+        public JewelryType JewelryType { get; set; }
+    }
+
     public class Consumable : Item { }
     public class Book : Item 
     { 
@@ -162,29 +195,52 @@ namespace DungeonRpg
             }
         }
 
-        public void FloorFill(int layer, int x, int y, int tileId)
+        public void FillRectangle(int layer, (int x, int y) pos1, (int x, int y) pos2, int tileId)
         {
-            var floodTileId = Data[layer, x, y];
-            var unvisited = new Queue<(int x, int y)>();
-            unvisited.Enqueue((x, y));
-            var visited = new bool[Width, Height];
-            while(unvisited.Count > 0)
-            {
-                var current = unvisited.Dequeue();
-                visited[current.x, current.y] = true;
-                Data[layer, current.x, current.y] = tileId;
+            (int x, int y) min = (Math.Min(pos1.x, pos2.x), Math.Min(pos1.y, pos2.y));
+            (int w, int h) size = (Math.Abs(pos2.x - pos1.x), Math.Abs(pos2.y - pos1.y));
 
-                foreach (var neighbour in new List<(int x, int y)> { (1, 0), (0, 1), (-1, 0), (0, -1) })
+            for(int i = min.x; i <= min.x + size.w; i++)
+            {
+                for(int j = min.y; j <= min.y + size.h; j++)
                 {
-                    (int x, int y) adjacent = (current.x + neighbour.x, current.y + neighbour.y);
-                    if (IsInRegion(adjacent.x, adjacent.y)
-                        && !visited[adjacent.x, adjacent.y]
-                        && Data[layer, adjacent.x, adjacent.y] == floodTileId)
-                    {
-                        unvisited.Enqueue(adjacent);
-                    }
+                    Data[layer, i, j] = tileId;
                 }
             }
+        }
+
+        public void Line(int layer, int x1, int y1, int x2, int y2, int tileId)
+        {
+
+        }
+
+        public void FloodFill(int layer, int x, int y, int tileId)
+        {
+            Task.Run(() =>
+            {
+                var floodTileId = Data[layer, x, y];
+                var unvisited = new Queue<(int x, int y)>();
+                unvisited.Enqueue((x, y));
+                var visited = new bool[Width, Height];
+                while (unvisited.Count > 0)
+                {
+                    var current = unvisited.Dequeue();
+                    visited[current.x, current.y] = true;
+                    Data[layer, current.x, current.y] = tileId;
+
+                    foreach (var neighbour in new List<(int x, int y)> { (1, 0), (0, 1), (-1, 0), (0, -1) })
+                    {
+                        (int x, int y) adjacent = (current.x + neighbour.x, current.y + neighbour.y);
+                        if (IsInRegion(adjacent.x, adjacent.y)
+                            && !visited[adjacent.x, adjacent.y]
+                            && Data[layer, adjacent.x, adjacent.y] == floodTileId)
+                        {
+                            visited[adjacent.x, adjacent.y] = true;
+                            unvisited.Enqueue(adjacent);
+                        }
+                    }
+                }
+            });
         }
     }
 

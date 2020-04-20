@@ -39,8 +39,77 @@ table thead tr:first-child {
     padding: 2px 4px;
 }
 
-/* Forms */
+.form-xsmall {
+    width: 30px;
+}
 
+.form-small {
+    width: 40px;
+}
+
+.form-normal {
+    width: 60px;
+}
+
+.form-medium {
+    width: 80px;
+}
+
+.form-xmedium {
+    width: 100px;
+}
+
+.form-large {
+    width: 160px;
+}
+
+.form-xlarge {
+    width: 240px;
+}
+
+.form-xxlarge {
+    width: 300px;
+}
+
+@media all and (min-width: 0px) and (max-width: 2000px) {
+    td.lg-hide {
+        display: none;
+        width: 0;
+        height: 0;
+        opacity: 0;
+        visibility: collapse;
+    }
+
+    .form-xlarge {
+        width: 160px;
+    }
+
+    .form-xxlarge {
+        width: 150px;
+    }
+
+    .editor-data {
+        width: calc(100% - 1406px);
+    }
+
+    .editor-properties {
+        width: 400px;
+    }
+}
+
+@media all and (min-width: 0px) and (max-width: 1000px) {
+    td.sm-hide {
+        display: none;
+        width: 0;
+        height: 0;
+        opacity: 0;
+        visibility: collapse;
+    }
+
+        
+}
+
+/* Forms */
 input {
     background-color: #333;
     color: #ddd;
@@ -56,6 +125,7 @@ button, .button {
     padding: 4px 8px;
     background-color: #ccc;
 }
+
 
 .button-danger {
     color: red;
@@ -122,24 +192,28 @@ p {
     width: 80px;
 }
 
-.form-small {
-    width: 40px;
+.editor input[disabled] {
+    color: #aaa;
 }
 
-.form-medium {
-    width: 80px;
+.editor select {
+    background-color: #444;
+    border-radius: 3px;
+    border: 0;
+    color: #eee;
+    height: 19px;
 }
 
-.form-large {
-    width: 160px;
+.editor select option {
+    background-color: #444;
+    padding: 2px 3px;
+    font-family: sans-serif;
+    font-size: 8pt;
+    color: #eee;
 }
 
-.form-xlarge {
-    width: 240px;
-}
-
-.form-xxlarge {
-    width: 300px;
+.stretch {
+    width: 100%;
 }
 
 .editor input {
@@ -183,14 +257,45 @@ p {
     background-color: #333;
 }
 
-.editor-properties {
-    width: calc(100% - 1004px);
+.editor-data {
+    width: calc(100% - 1606px);
     float: left;
     height: 100%;
     background-color: #333;
-    padding: 8px;
+    padding: 4px;
     z-index: 10;
     border-left: 2px #666 solid;
+}
+
+.editor-properties {
+    width: 600px;
+    float: left;
+    border-left: 2px #666 solid;
+    height: 100%;
+    overflow: auto;
+    background-color: #333;
+    padding: 4px;
+    z-index: 10;
+}
+
+.table-nopadding, .table-nopadding tr, .table-nopadding td {
+    margin: 0;
+    padding: 0;
+}
+
+.table-smallpadding, .table-smallpadding tr, .table-smallpadding td {
+    margin: 1px;
+    padding: 1px;
+}
+
+@media all and (min-width: 0px) and (max-width: 2000px) {
+    .editor-data {
+        width: calc(100% - 1406px);
+    }
+
+    .editor-properties {
+        width: 400px;
+    }
 }
 
 .map-panel {
@@ -230,7 +335,7 @@ fieldset legend {
 }
 
 hr {
-    border-bottom: 1px #888 solid;
+    border-bottom: 1px #666 solid;
     height: 1px;
     margin: 8px 0;
 }
