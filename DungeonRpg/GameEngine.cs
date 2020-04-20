@@ -186,32 +186,33 @@ namespace DungeonRpg
         
         public void FillLayer(int layer, int tileId)
         {
-            for(int x = 0; x < Width; x++)
+            Task.Run(() =>
             {
-                for(int y = 0; y < Height; y++)
+                for (int x = 0; x < Width; x++)
                 {
-                    this[layer, x, y] = tileId;
+                    for (int y = 0; y < Height; y++)
+                    {
+                        this[layer, x, y] = tileId;
+                    }
                 }
-            }
+            });
         }
 
         public void FillRectangle(int layer, (int x, int y) pos1, (int x, int y) pos2, int tileId)
         {
-            (int x, int y) min = (Math.Min(pos1.x, pos2.x), Math.Min(pos1.y, pos2.y));
-            (int w, int h) size = (Math.Abs(pos2.x - pos1.x), Math.Abs(pos2.y - pos1.y));
-
-            for(int i = min.x; i <= min.x + size.w; i++)
+            Task.Run(() =>
             {
-                for(int j = min.y; j <= min.y + size.h; j++)
+                (int x, int y) min = (Math.Min(pos1.x, pos2.x), Math.Min(pos1.y, pos2.y));
+                (int w, int h) size = (Math.Abs(pos2.x - pos1.x), Math.Abs(pos2.y - pos1.y));
+
+                for (int i = min.x; i <= min.x + size.w; i++)
                 {
-                    Data[layer, i, j] = tileId;
+                    for (int j = min.y; j <= min.y + size.h; j++)
+                    {
+                        Data[layer, i, j] = tileId;
+                    }
                 }
-            }
-        }
-
-        public void Line(int layer, int x1, int y1, int x2, int y2, int tileId)
-        {
-
+            });
         }
 
         public void FloodFill(int layer, int x, int y, int tileId)
