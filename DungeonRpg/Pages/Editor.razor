@@ -5,7 +5,7 @@
 @inject NpcService npcService
 @inject EnemyService enemyService
 @inject PlayerService playerService
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Administrator")]
 @using System.Timers
 
 <div class="editor">
@@ -226,6 +226,7 @@
                     <tr>
                         <td>ID</td>
                         <td>Name</td>
+                        <td>Admin</td>
                         <td></td>
                     </tr>
                 </thead>
@@ -235,6 +236,7 @@
                         <tr>
                             <td class="form-xlarge"><input type="text" @bind="player.Id" /></td>
                             <td><input type="text" @bind="player.Name" /></td>
+                            <td><input type="checkbox" @bind="player.IsAdministrator" /></td>
                             <td class="form-medium">
                                 <button class="button-small" @onclick="() => playerService.Remove(player)">&#10060;</button>
                                 <button class="button-small" @onclick="() => DisplayPlayerProperties(player)">&#129146;</button>

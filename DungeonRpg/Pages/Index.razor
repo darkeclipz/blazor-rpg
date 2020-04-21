@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Http
+@using System.Security.Claims
 @inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager navigationManager 
 
@@ -13,7 +14,13 @@
     <div style="width: 400px; float: left;">
         <AuthorizeView>
             <Authorized>
-                <p>You are already logged in <b>@Username</b>.</p> <br />
+                <p>You are logged in as <b>@Username</b>.</p> <br />
+
+                @if(IsAdministrator)
+                {
+                    <a href="editor">Editor</a><br/>
+                }
+                <a href="docs">Game Design Document</a><br/>
                 <a href="/api/User/logout">Logout</a>
             </Authorized>
             <NotAuthorized>
@@ -31,18 +38,18 @@
     <div style="clear: both;"></div>
 </div>
 
-<a href="register">Register</a> | <a href="login">Login</a> | <a href="Editor">Editor</a> | <a href="docs">Game Design Document</a>
-
 @code {
     [Parameter]
     public string ErrorMessage { get; set; } = String.Empty;
     private string Username { get; set; }
+    private bool IsAdministrator { get; set; }
 
     protected override void OnInitialized()
     {
         if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
             Username = httpContextAccessor.HttpContext.User.Identity.Name;
+            IsAdministrator = httpContextAccessor.HttpContext.User.HasClaim("role", "Administrator");
         }
 
         var uri = new UriBuilder(navigationManager.Uri);

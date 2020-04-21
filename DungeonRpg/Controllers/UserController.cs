@@ -37,11 +37,8 @@ namespace DungeonRpg.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 // Set the username of the authenticated user
-                userModel.UserName =
-                    User.Identity.Name;
-
-                userModel.IsAuthenticated =
-                    User.Identity.IsAuthenticated;
+                userModel.UserName = User.Identity.Name;
+                userModel.IsAuthenticated = User.Identity.IsAuthenticated;
             };
 
             return userModel;
@@ -63,7 +60,7 @@ namespace DungeonRpg.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, model.Username),
-                    new Claim(ClaimTypes.Role, "Administrator")
+                    new Claim(ClaimTypes.Role, player.IsAdministrator ? "Administrator" : "User")
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -106,7 +103,7 @@ namespace DungeonRpg.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, player.Name),
-                new Claim(ClaimTypes.Role, "Administrator")
+                new Claim(ClaimTypes.Role, player.IsAdministrator ? "Administrator" : "User")
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

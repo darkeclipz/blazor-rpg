@@ -51,7 +51,8 @@ namespace DungeonRpg
     public class Enemy : Character, IKey<Enemy> { }
     public class Player : Character, IKey<Player>
     {
-        public string Password { get; internal set; }
+        public string Password { get; set; }
+        public bool IsAdministrator { get;set; }
     }
     public class Npc : Character, IKey<Npc> { }
 
@@ -362,6 +363,16 @@ namespace DungeonRpg
 
     public class PlayerService : Service<Player>
     {
+        public override Player New()
+        {
+            var player = new Player();
+            if(Entities.Count == 0)
+            {
+                player.IsAdministrator = true;
+            }
+            return Add(player);
+        }
+
         public Player FindByName(string username)
         {
             return Entities.FirstOrDefault(entity => entity.Name.ToLower() == username.ToLower());
