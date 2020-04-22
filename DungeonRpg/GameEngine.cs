@@ -203,12 +203,12 @@ namespace DungeonRpg
         {
             Task.Run(() =>
             {
-                (int x, int y) min = (Math.Min(pos1.x, pos2.x), Math.Min(pos1.y, pos2.y));
-                (int w, int h) size = (Math.Abs(pos2.x - pos1.x), Math.Abs(pos2.y - pos1.y));
+                (int x, int y) = (Math.Min(pos1.x, pos2.x), Math.Min(pos1.y, pos2.y));
+                (int w, int h) = (Math.Abs(pos2.x - pos1.x), Math.Abs(pos2.y - pos1.y));
 
-                for (int i = min.x; i <= min.x + size.w; i++)
+                for (int i = x; i <= x + w; i++)
                 {
-                    for (int j = min.y; j <= min.y + size.h; j++)
+                    for (int j = y; j <= y + h; j++)
                     {
                         Data[layer, i, j] = tileId;
                     }
@@ -409,4 +409,15 @@ namespace DungeonRpg
             File.WriteAllText(fileName, json);
         }
     }
+
+    public enum EffectType { Healing, Attribute, Mana }
+    public class Effect : IKey<Effect>
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public EffectType EffectType { get; set; } 
+    }
+
+    public class EffectService : Service<Effect> { }
 }

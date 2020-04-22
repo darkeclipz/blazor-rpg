@@ -61,3 +61,5 @@ C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Debug\netcoreapp3
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Debug\netcoreapp3.1\Razor\Pages\TilesetViewer.razor.g.cs
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Debug\netcoreapp3.1\Razor\Shared\MainLayout.razor.g.cs
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Debug\netcoreapp3.1\Razor\_Imports.razor.g.cs
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\Retiler.razor.g.cs
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Debug\netcoreapp3.1\Razor\Pages\Retiler.razor.g.cs

@@ -15,12 +15,12 @@
         <AuthorizeView>
             <Authorized>
                 <p>You are logged in as <b>@Username</b>.</p> <br />
-
                 @if(IsAdministrator)
                 {
+                    <a href="docs">Game Design Document</a><br/>
                     <a href="editor">Editor</a><br/>
+                    <a href="retiler">Retiler Tool</a><br/>
                 }
-                <a href="docs">Game Design Document</a><br/>
                 <a href="/api/User/logout">Logout</a>
             </Authorized>
             <NotAuthorized>
@@ -49,7 +49,7 @@
         if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
             Username = httpContextAccessor.HttpContext.User.Identity.Name;
-            IsAdministrator = httpContextAccessor.HttpContext.User.HasClaim("role", "Administrator");
+            IsAdministrator = httpContextAccessor.HttpContext.User.IsInRole("Administrator");
         }
 
         var uri = new UriBuilder(navigationManager.Uri);

@@ -4,7 +4,7 @@ body {
     font-family: 'Metamorphous';
     font-size: 10pt;
     color: #eee;
-    background-color: #000
+    background-color: #000;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -105,8 +105,6 @@ table thead tr:first-child {
         opacity: 0;
         visibility: collapse;
     }
-
-        
 }
 
 /* Forms */
@@ -125,7 +123,6 @@ button, .button {
     padding: 4px 8px;
     background-color: #ccc;
 }
-
 
 .button-danger {
     color: red;
@@ -365,7 +362,7 @@ hr {
     z-index: 2;
 }
 
-.map-tile-layer .tile:hover {
+.map .map-tile-layer .tile:hover {
     box-shadow: 0px 0px 0px 2px rgba(255, 255, 255, 0.33) inset;
     cursor: pointer;
 }
