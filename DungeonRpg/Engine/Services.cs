@@ -181,9 +181,9 @@ namespace DungeonRpg.Engine
         public Map FindByName(string name) => Entities.FirstOrDefault(e => e.Name == name);
 
         public IEnumerable<Entity> EntitiesAtPosition(int x, int y, Guid mapId)
-            => EntitiesAtPosition((x, y), mapId);
+            => GetEntitiesAtPosition((x, y), mapId);
 
-        public IEnumerable<Entity> EntitiesAtPosition((int x, int y) position, Guid mapId)
+        public IEnumerable<Entity> GetEntitiesAtPosition((int x, int y) position, Guid mapId)
         {
             var entities = new List<Entity>();
             entities.AddRange(PlayerService.All().Where(p => p.Position == position && p.CurrentMapId == mapId));

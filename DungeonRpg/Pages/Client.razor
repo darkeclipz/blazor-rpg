@@ -39,7 +39,7 @@
                                             </div>
                                         }
                                     }
-                                    @foreach (var entity in mapService.EntitiesAtPosition(position, Map.Id))
+                                    @foreach (var entity in mapService.GetEntitiesAtPosition(position, Map.Id))
                                     {
                                         switch (entity)
                                         {
@@ -118,6 +118,7 @@
     {
         base.OnInitialized();
         LoadPlayerData();
+        LoadMap();
         StartUpdateTimer();
     }
 
@@ -128,14 +129,23 @@
             var username = httpContextAccessor.HttpContext.User.Identity.Name;
             Player = playerService.FindByName(username);
             IsAdministrator = httpContextAccessor.HttpContext.User.IsInRole("Administrator");
-            Map = mapService.Find(Player.CurrentMapId);
-            if (Map == null)
-            {
-                Map = mapService.FindByName(Rules.DefaultMapName);
-                Player.CurrentMapId = Map.Id;
-                Player.Position = Rules.DefaultPosition;
-            }
         }
+    }
+
+    private void LoadMap()
+    {
+        Map = mapService.Find(Player.CurrentMapId);
+        if (Map == null)
+        {
+            ResetMap();
+        }
+    }
+
+    private void ResetMap()
+    {
+        Map = mapService.FindByName(Rules.DefaultMapName);
+        Player.CurrentMapId = Map.Id;
+        Player.Position = Rules.DefaultPosition;
     }
 
     private void StartUpdateTimer()
