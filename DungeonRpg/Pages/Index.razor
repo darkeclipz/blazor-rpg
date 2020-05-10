@@ -6,36 +6,39 @@
 @using Microsoft.AspNetCore.Http
 @using System.Security.Claims
 @inject IHttpContextAccessor httpContextAccessor
-@inject NavigationManager navigationManager 
+@inject NavigationManager navigationManager
 
 <h1 style="text-align: center;">RPG Game</h1>
 
 <div style="max-width: 800px; margin: auto;">
-    <div style="width: 400px; float: left;">
-        <AuthorizeView>
-            <Authorized>
+    <AuthorizeView>
+        <Authorized>
+            <div style="width: 800px; text-align: center;">
                 <p>You are logged in as <b>@Username</b>.</p> <br />
-                @if(IsAdministrator)
+                <a href="client">Game</a><br />
+                @if (IsAdministrator)
                 {
-                    <a href="docs">Game Design Document</a><br/>
-                    <a href="editor">Editor</a><br/>
-                    <a href="retiler">Retiler Tool</a><br/>
+                    <a href="docs">Game Design Document</a><br />
+                    <a href="editor">Editor</a><br />
+                    <a href="retiler">Retiler Tool</a><br />
                 }
                 <a href="/api/User/logout">Logout</a>
-            </Authorized>
-            <NotAuthorized>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div style="width: 400px; float: left;">
                 <Login />
-                @if(ErrorMessage.Length > 0)
+                @if (ErrorMessage.Length > 0)
                 {
                     <p>@ErrorMessage</p>
                 }
-            </NotAuthorized>
-        </AuthorizeView>
-    </div>
-    <div style="width: 400px; float: left;">
-        <Register />
-    </div>
-    <div style="clear: both;"></div>
+            </div>
+            <div style="width: 400px; float: left">
+                <Register />
+            </div>
+            <div style="clear:both;"></div>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
 
 @code {
@@ -46,7 +49,7 @@
 
     protected override void OnInitialized()
     {
-        if(httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
             Username = httpContextAccessor.HttpContext.User.Identity.Name;
             IsAdministrator = httpContextAccessor.HttpContext.User.IsInRole("Administrator");
@@ -55,7 +58,7 @@
         var uri = new UriBuilder(navigationManager.Uri);
         var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
-        if(queryParams.AllKeys.Count(k => k == "errormessage") > 0)
+        if (queryParams.AllKeys.Count(k => k == "errormessage") > 0)
         {
             ErrorMessage = queryParams["errormessage"];
         }

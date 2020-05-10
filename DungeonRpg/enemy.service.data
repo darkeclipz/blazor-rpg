@@ -1,1 +1,0 @@
-{"$type":"System.Collections.Generic.List`1[[DungeonRpg.Enemy, DungeonRpg]], System.Private.CoreLib","$values":[{"$type":"DungeonRpg.Enemy, DungeonRpg","Id":"1111a512-af52-4b35-b8b9-3df28b7b7207","Name":"Rat","Experience":0,"Attributes":null,"Health":0,"MaxHealth":0}]}

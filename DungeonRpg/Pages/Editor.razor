@@ -1,4 +1,6 @@
 ﻿@page "/editor"
+@using System.Timers
+@using DungeonRpg.Engine
 @inject MapService mapService
 @inject ComponentService componentService
 @inject ItemService itemService
@@ -6,7 +8,6 @@
 @inject EnemyService enemyService
 @inject PlayerService playerService
 @attribute [Authorize(Roles = "Administrator")]
-@using System.Timers
 
 <div class="editor">
     <div class="editor-toolbar">
@@ -68,7 +69,7 @@
                     <td><input type="text" @bind="Position.Y" /></td>
                 </tr>
             </table>
-            <hr/>
+            <hr />
             <table class="table-borderless">
                 <tr>
                     <td></td>
@@ -239,7 +240,7 @@
                             <td><input type="checkbox" @bind="player.IsAdministrator" /></td>
                             <td class="form-medium">
                                 <button class="button-small" @onclick="() => playerService.Remove(player)">&#10060;</button>
-                                <button class="button-small" @onclick="() => DisplayPlayerProperties(player)">&#129146;</button>
+                                <button class="button-small" @onclick="() => DisplayEntityProperties(player)">&#129146;</button>
                             </td>
                         </tr>
                     }
@@ -271,7 +272,7 @@
                             <td><input type="text" @bind="enemy.Name" /></td>
                             <td class="form-medium">
                                 <button class="button-small" @onclick="() => enemyService.Remove(enemy)">&#10060;</button>
-                                <button class="button-small" @onclick="() => DisplayEnemyProperties(enemy)">&#129146;</button>
+                                <button class="button-small" @onclick="() => DisplayEntityProperties(enemy)">&#129146;</button>
                             </td>
                         </tr>
                     }
@@ -303,7 +304,7 @@
                             <td><input type="text" @bind="npc.Name" /></td>
                             <td class="form-medium">
                                 <button class="button-small" @onclick="() => npcService.Remove(npc)">&#10060;</button>
-                                <button class="button-small" @onclick="() => DisplayNpcProperties(npc)">&#129146;</button>
+                                <button class="button-small" @onclick="() => DisplayEntityProperties(npc)">&#129146;</button>
                             </td>
                         </tr>
                     }
@@ -524,17 +525,110 @@
                     </tbody>
                 </table>
             }
-            else if (ShowPlayerProperties && PlayerProperties != null)
+            else if (ShowEntityProperties && EntityProperties != null)
             {
-                <p>Player properties</p>
-            }
-            else if (ShowEnemyProperties && EnemyProperties != null)
-            {
-                <p>Enemy properties</p>
-            }
-            else if (ShowNpcProperties && NpcProperties != null)
-            {
-                <p>NPC properties</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>ID</td>
+                            <td><input type="text" disabled @bind="EntityProperties.Id" /></td>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td><input type="text" @bind="EntityProperties.Name" /></td>
+                        </tr>
+                        <tr>
+                            <td>Experience</td>
+                            <td><input type="text" @bind="EntityProperties.Experience" /></td>
+                        </tr>
+                        <tr>
+                            <td>Attributes</td>
+                            <td>
+                                <table class="table-borderless table-smallpadding">
+                                    <tr>
+                                        <td>Strength</td>
+                                        <td><input type="text" @bind="EntityProperties.Attributes.Strength" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dexterity</td>
+                                        <td><input type="text" @bind="EntityProperties.Attributes.Dexterity" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Constitution</td>
+                                        <td><input type="text" @bind="EntityProperties.Attributes.Constitution" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Intelligence</td>
+                                        <td><input type="text" @bind="EntityProperties.Attributes.Intelligence" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wisdom</td>
+                                        <td><input type="text" @bind="EntityProperties.Attributes.Wisdom" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Memory</td>
+                                        <td><input type="text" @bind="EntityProperties.Attributes.Memory" /></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Health</td>
+                            <td><input type="text" @bind="EntityProperties.Health" /></td>
+                        </tr>
+                        <tr>
+                            <td>Max health</td>
+                            <td><input type="text" @bind="EntityProperties.MaxHealth" /></td>
+                        </tr>
+                        <tr>
+                            <td>Position</td>
+                            <td>
+                                <table class="table-borderless table-smallpadding">
+                                    <tr>
+                                        <td>X</td>
+                                        <td><input type="text" @bind="EntityProperties.Position.X" /></td>
+                                        <td>Y</td>
+                                        <td><input type="text" @bind="EntityProperties.Position.Y" /></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Current map id</td>
+                            <td><input type="text" @bind="EntityProperties.CurrentMapId" /></td>
+                        </tr>
+                        @if (EntityProperties is Character character)
+                        {
+                            <tr>
+                                <td>Gender</td>
+                                <td>
+                                    <select @bind="character.Gender" class="stretch">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Race</td>
+                                <td>
+                                    <select @bind="character.Race" class="stretch">
+                                        <option value="Human">Human</option>
+                                        <option value="Elf">Elf</option>
+                                        <option value="Orc">Orc</option>
+                                        <option value="Draconian">Draconian</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                        @if (EntityProperties is Player player)
+                        {
+                            <tr>
+                                <td>Admin</td>
+                                <td><input type="checkbox" @bind="player.IsAdministrator" /></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             }
             else
             {
@@ -662,7 +756,6 @@
                     FirstSelectedPoint = null;
                 }
                 break;
-
         }
     }
 
@@ -675,39 +768,19 @@
         ShowItemProperties = true;
     }
 
-    private bool ShowPlayerProperties { get; set; } = false;
-    private Player PlayerProperties { get; set; }
-    private void DisplayPlayerProperties(Player player)
+    private bool ShowEntityProperties { get; set; } = false;
+    private Entity EntityProperties { get; set; }
+    private void DisplayEntityProperties(Entity entity)
     {
         DisableAllPropertyDisplays();
-        PlayerProperties = player;
-        ShowPlayerProperties = true;
-    }
-
-    private bool ShowEnemyProperties { get; set; } = false;
-    private Enemy EnemyProperties { get; set; }
-    private void DisplayEnemyProperties(Enemy enemy)
-    {
-        DisableAllPropertyDisplays();
-        EnemyProperties = enemy;
-        ShowEnemyProperties = true;
-    }
-
-    private bool ShowNpcProperties { get; set; } = false;
-    private Npc NpcProperties { get; set; }
-    private void DisplayNpcProperties(Npc npc)
-    {
-        DisableAllPropertyDisplays();
-        NpcProperties = npc;
-        ShowNpcProperties = true;
+        EntityProperties = entity;
+        ShowEntityProperties = true;
     }
 
     private void DisableAllPropertyDisplays()
     {
         ShowItemProperties = false;
-        ShowPlayerProperties = false;
-        ShowEnemyProperties = false;
-        ShowNpcProperties = false;
+        ShowEntityProperties = false;
     }
 
     private void Move(int x, int y)

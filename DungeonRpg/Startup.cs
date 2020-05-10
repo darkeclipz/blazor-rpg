@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using DungeonRpg.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using DungeonRpg.Engine;
 
 namespace DungeonRpg
 {
@@ -33,13 +33,10 @@ namespace DungeonRpg
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddHttpContextAccessor();
             services.AddScoped<HttpContextAccessor>();
-            
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ComponentService>();
             services.AddSingleton<ItemService>();
             services.AddSingleton<PlayerService>();
             services.AddSingleton<NpcService>();
-            services.AddSingleton<SkillService>();
             services.AddSingleton<EnemyService>();
             services.AddSingleton<MapService>();
         }

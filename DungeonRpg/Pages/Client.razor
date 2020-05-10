@@ -1,0 +1,167 @@
+﻿@page "/client"
+@using DungeonRpg.Engine
+@using System.Timers
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor httpContextAccessor
+@inject NavigationManager navigationManager
+@inject MapService mapService
+@inject PlayerService playerService
+@attribute [Authorize]
+
+<div class="client">
+    <div class="panel-top">
+        <div class="panel-left">
+            <div class="panel-map">
+                <div class="map">
+                    @if (Map != null)
+                    {
+                        for (int y = -10; y < 10; y++)
+                        {
+                            <div class="map-row">
+                                @for (int x = -10; x < 10; x++)
+                                {
+                                    (int x, int y) position = (x + Player.Position.X, y + Player.Position.Y);
+                                <div class="map-tile">
+                                    @for (int layer = 0; layer < Map.Layers; layer++)
+                                    {
+                                        var tileId = Map[layer, position.x, position.y];
+                                        if (tileId == 4839)
+                                        {
+                                            <div class="map-tile-layer">
+                                                <div class="tile tile-68"></div>
+                                            </div>
+                                        }
+                                        else if (tileId != 0)
+                                        {
+                                            <div class="map-tile-layer">
+                                                <div class="tile tile-@tileId"></div>
+                                            </div>
+                                        }
+                                    }
+                                    @foreach (var entity in mapService.EntitiesAtPosition(position, Map.Id))
+                                    {
+                                        switch (entity)
+                                        {
+                                            case Player player:
+                                                <div class="map-tile-layer">
+                                                    <div class="tile tile-71"></div>
+                                                </div>
+                                                break;
+                                            case Npc npc:
+                                                <div class="map-tile-layer">
+                                                    <div class="tile tile-71"></div>
+                                                </div>
+                                                break;
+                                            case Enemy enemy:
+                                                <div class="map-tile-layer">
+                                                    <div class="tile tile-71"></div>
+                                                </div>
+                                                break;
+                                        }
+                                    }
+                                    @if (IsTileWalkable(position))
+                                    {
+                                        <div class="map-tile-layer" @onclick="() => WalkTo(position)">
+                                            <div class="tile tile-hover"></div>
+                                        </div>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        }
+                    }
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-center">
+            <div class="panel-log">
+                log
+            </div>
+        </div>
+        <div class="panel-right">
+            <div class="panel-character">
+                character
+            </div>
+            <div class="panel-equipment">
+                equipment
+            </div>
+            <div class="panel-inventory">
+                inventory
+            </div>
+            <div class="panel-quests">
+                quests
+            </div>
+        </div>
+    </div>
+    <div class="panel-bottom">
+        <div class="panel-health">
+            health
+        </div>
+        <div class="panel-skillbar">
+            skillbar
+        </div>
+        <div class="panel-mana">
+            mana
+        </div>
+    </div>
+</div>
+
+@code {
+    protected Player Player { get; set; }
+    protected bool IsAdministrator { get; set; }
+    protected Map Map { get; set; }
+    private Timer UpdateTimer { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadPlayerData();
+        StartUpdateTimer();
+    }
+
+    private void LoadPlayerData()
+    {
+        if (httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        {
+            var username = httpContextAccessor.HttpContext.User.Identity.Name;
+            Player = playerService.FindByName(username);
+            IsAdministrator = httpContextAccessor.HttpContext.User.IsInRole("Administrator");
+            Map = mapService.Find(Player.CurrentMapId);
+            if (Map == null)
+            {
+                Map = mapService.FindByName(Rules.DefaultMapName);
+                Player.CurrentMapId = Map.Id;
+                Player.Position = Rules.DefaultPosition;
+            }
+        }
+    }
+
+    private void StartUpdateTimer()
+    {
+        UpdateTimer = new Timer();
+        UpdateTimer.Interval = 200;
+        UpdateTimer.AutoReset = true;
+        UpdateTimer.Elapsed += UpdateTimerElapsed;
+        UpdateTimer.Start();
+    }
+
+    protected void UpdateTimerElapsed(object sender, EventArgs args)
+        => InvokeAsync(StateHasChanged);
+
+    private bool IsTileWalkable((int x, int y) pos)
+        => ManhattanDistance(pos.x, pos.y, Player.Position.X, Player.Position.Y) == 1
+        && Map[1, pos.x, pos.y] == 0;
+
+    private int ManhattanDistance(int x1, int y1, int x2, int y2)
+        => Math.Abs(x2 - x1) + Math.Abs(y2 - y1);
+
+    private void WalkTo((int x, int y) position)
+    {
+        if(IsTileWalkable(position))
+        {
+            Player.Position = position;
+        }
+    }
+}
