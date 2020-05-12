@@ -16,10 +16,10 @@ namespace DungeonRpg.Engine
         }
     }
 
-    public class MoveAction : Action 
+    public class MoveAction : Action
     {
-        private Player player;
-        private MoveActionDirection direction;
+        private readonly Player player;
+        private readonly MoveActionDirection direction;
         public MoveAction(Player player, MoveActionDirection direction)
         {
             this.player = player;
@@ -37,7 +37,7 @@ namespace DungeonRpg.Engine
                 _ => player.Position
             };
             var map = factory.MapService.Find(player.CurrentMapId);
-            if(map[LayerType.Solid, position.x, position.y] == 0)
+            if(map.IsWalkable(position))
             {
                 player.Position = position;
             }

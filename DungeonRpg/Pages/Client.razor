@@ -177,7 +177,7 @@
 
     private bool IsTileWalkable((int x, int y) pos)
         => ManhattanDistance(pos.x, pos.y, Player.Position.X, Player.Position.Y) == 1
-        && Map[LayerType.Solid, pos.x, pos.y] == 0;
+        && Map.IsWalkable(pos);
 
     private int ManhattanDistance(int x1, int y1, int x2, int y2)
         => Math.Abs(x2 - x1) + Math.Abs(y2 - y1);

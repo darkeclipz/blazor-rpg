@@ -73,6 +73,10 @@ namespace DungeonRpg.Engine
             }
         }
 
+        public bool IsWalkable(int x, int y) => IsWalkable((x, y));
+
+        public bool IsWalkable((int x, int y) position) => this[LayerType.Solid, position.x, position.y] == 0;
+
         private bool IsInRegion(int x, int y) => !(x < 0 || x >= Width || y < 0 || y >= Height);
 
         public void FillLayer(LayerType layer, int tileId)
