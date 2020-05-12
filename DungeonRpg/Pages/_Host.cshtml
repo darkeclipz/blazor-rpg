@@ -22,5 +22,15 @@
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
     <script src="_framework/blazor.server.js"></script>
+    <script type="text/javascript">
+        window.exampleJsFunctions = {
+            focusElement: function (id) {
+                console.log('Focus on element id', id);
+                let element = document.getElementById(id);
+                console.log('Focus on element', element);
+                element.focus();
+            }
+        }
+    </script>
 </body>
 </html>

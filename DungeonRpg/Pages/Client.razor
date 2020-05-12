@@ -7,6 +7,7 @@
 @inject NavigationManager navigationManager
 @inject MapService mapService
 @inject PlayerService playerService
+@inject IJSRuntime JSRuntime
 @attribute [Authorize]
 
 <div class="client">
@@ -22,51 +23,51 @@
                                 @for (int x = -10; x < 10; x++)
                                 {
                                     (int x, int y) position = (x + Player.Position.X, y + Player.Position.Y);
-                                <div class="map-tile">
-                                    @for (int layer = 0; layer < Map.Layers; layer++)
-                                    {
-                                        var tileId = Map[layer, position.x, position.y];
-                                        if (tileId == 4839)
+                                    <div class="map-tile">
+                                        @for (int layer = 0; layer < Map.Layers; layer++)
                                         {
-                                            <div class="map-tile-layer">
-                                                <div class="tile tile-68"></div>
+                                            var tileId = Map[layer, position.x, position.y];
+                                            if (tileId == 4839)
+                                            {
+                                                <div class="map-tile-layer">
+                                                    <div class="tile tile-68"></div>
+                                                </div>
+                                            }
+                                            else if (tileId != 0)
+                                            {
+                                                <div class="map-tile-layer">
+                                                    <div class="tile tile-@tileId"></div>
+                                                </div>
+                                            }
+                                        }
+                                        @foreach (var entity in mapService.GetEntitiesAtPosition(position, Map.Id))
+                                        {
+                                            switch (entity)
+                                            {
+                                                case Player player:
+                                                    <div class="map-tile-layer">
+                                                        <div class="tile tile-71"></div>
+                                                    </div>
+                                                    break;
+                                                case Npc npc:
+                                                    <div class="map-tile-layer">
+                                                        <div class="tile tile-71"></div>
+                                                    </div>
+                                                    break;
+                                                case Enemy enemy:
+                                                    <div class="map-tile-layer">
+                                                        <div class="tile tile-71"></div>
+                                                    </div>
+                                                    break;
+                                            }
+                                        }
+                                        @if (IsTileWalkable(position))
+                                        {
+                                            <div class="map-tile-layer" @onclick="() => WalkTo(position)">
+                                                <div class="tile tile-hover"></div>
                                             </div>
                                         }
-                                        else if (tileId != 0)
-                                        {
-                                            <div class="map-tile-layer">
-                                                <div class="tile tile-@tileId"></div>
-                                            </div>
-                                        }
-                                    }
-                                    @foreach (var entity in mapService.GetEntitiesAtPosition(position, Map.Id))
-                                    {
-                                        switch (entity)
-                                        {
-                                            case Player player:
-                                                <div class="map-tile-layer">
-                                                    <div class="tile tile-71"></div>
-                                                </div>
-                                                break;
-                                            case Npc npc:
-                                                <div class="map-tile-layer">
-                                                    <div class="tile tile-71"></div>
-                                                </div>
-                                                break;
-                                            case Enemy enemy:
-                                                <div class="map-tile-layer">
-                                                    <div class="tile tile-71"></div>
-                                                </div>
-                                                break;
-                                        }
-                                    }
-                                    @if (IsTileWalkable(position))
-                                    {
-                                        <div class="map-tile-layer" @onclick="() => WalkTo(position)">
-                                            <div class="tile tile-hover"></div>
-                                        </div>
-                                    }
-                                </div>
+                                    </div>
                                 }
                             </div>
                         }
@@ -77,7 +78,8 @@
         </div>
         <div class="panel-center">
             <div class="panel-log">
-                log
+                log <br/>
+                <input type="text" style="top:-200px;position:fixed;" @bind="LogInput" id="focus" @onkeydown="HandleKeyEvent"/>
             </div>
         </div>
         <div class="panel-right">
@@ -107,12 +109,12 @@
         </div>
     </div>
 </div>
-
 @code {
     protected Player Player { get; set; }
     protected bool IsAdministrator { get; set; }
     protected Map Map { get; set; }
     private Timer UpdateTimer { get; set; }
+    private string LogInput { get; set; }
 
     protected override void OnInitialized()
     {
@@ -120,6 +122,17 @@
         LoadPlayerData();
         LoadMap();
         StartUpdateTimer();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        Focus("focus");
+    }
+
+    public async Task Focus(string elementId)
+    {
+        await JSRuntime.InvokeVoidAsync("exampleJsFunctions.focusElement", elementId);
     }
 
     private void LoadPlayerData()
@@ -169,9 +182,22 @@
 
     private void WalkTo((int x, int y) position)
     {
-        if(IsTileWalkable(position))
+        if (IsTileWalkable(position))
         {
             Player.Position = position;
         }
     }
+
+    private void HandleKeyEvent(KeyboardEventArgs args)
+    {
+        LogInput = string.Empty;
+        switch (args.Key)
+        {
+            case "w": WalkTo((Player.Position.X, Player.Position.Y - 1)); break;
+            case "a": WalkTo((Player.Position.X - 1, Player.Position.Y)); break;
+            case "s": WalkTo((Player.Position.X, Player.Position.Y + 1)); break;
+            case "d": WalkTo((Player.Position.X + 1, Player.Position.Y)); break;
+        }
+    }
+
 }
