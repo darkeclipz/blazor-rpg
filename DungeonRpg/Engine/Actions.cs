@@ -7,14 +7,9 @@ using static DungeonRpg.Engine.MoveAction;
 
 namespace DungeonRpg.Engine
 {
-    public class Action : IKey<Action>
+    public abstract class Action
     {
-        public Guid Id { get; set; }
-
-        public virtual void Execute(ActionFactory factory)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void Execute(ActionFactory factory) { }
     }
 
     public class MoveAction : Action
