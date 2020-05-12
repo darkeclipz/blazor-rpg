@@ -64,3 +64,4 @@ C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreap
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreapp3.1\DungeonRpg.dll
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreapp3.1\DungeonRpg.pdb
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreapp3.1\DungeonRpg.genruntimeconfig.cache
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreapp3.1\DungeonRpg.csprojAssemblyReference.cache

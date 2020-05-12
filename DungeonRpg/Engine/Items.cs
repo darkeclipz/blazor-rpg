@@ -18,16 +18,17 @@ namespace DungeonRpg.Engine
         public ItemGrade Grade { get; set; }
         public bool Discardable { get; set; } = true;
         public bool Sellable { get; set; } = true;
-        public static ItemType GetItemType(Item item)
+
+        public static ItemType GetItemType(Item item) => item switch
         {
-            if (item is Weapon) return ItemType.Weapon;
-            else if (item is Armor) return ItemType.Armor;
-            else if (item is Jewelry) return ItemType.Jewelry;
-            else if (item is Material) return ItemType.Material;
-            else if (item is Book) return ItemType.Book;
-            else if (item is Consumable) return ItemType.Consumable;
-            else return ItemType.Item;
-        }
+            Weapon _ => ItemType.Weapon,
+            Armor _ => ItemType.Armor,
+            Jewelry _ => ItemType.Jewelry,
+            Material _ => ItemType.Material,
+            Book _ => ItemType.Book,
+            Consumable _ => ItemType.Consumable,
+            _ => ItemType.Item
+        };
     }
 
     public abstract class Equipment : Item

@@ -190,14 +190,18 @@
 
     private void HandleKeyEvent(KeyboardEventArgs args)
     {
-        LogInput = string.Empty;
-        switch (args.Key)
+        (int, int)? pos = args.Key switch
         {
-            case "w": WalkTo((Player.Position.X, Player.Position.Y - 1)); break;
-            case "a": WalkTo((Player.Position.X - 1, Player.Position.Y)); break;
-            case "s": WalkTo((Player.Position.X, Player.Position.Y + 1)); break;
-            case "d": WalkTo((Player.Position.X + 1, Player.Position.Y)); break;
+            "w" => (Player.Position.X, Player.Position.Y - 1),
+            "a" => (Player.Position.X - 1, Player.Position.Y),
+            "s" => (Player.Position.X, Player.Position.Y + 1),
+            "d" => (Player.Position.X + 1, Player.Position.Y),
+            _ => null
+        };
+        if (pos.HasValue)
+        {
+            WalkTo(pos.Value);
+            LogInput = string.Empty;
         }
     }
-
 }
