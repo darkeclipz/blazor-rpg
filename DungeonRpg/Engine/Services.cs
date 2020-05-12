@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static DungeonRpg.Engine.MoveAction;
 
 namespace DungeonRpg.Engine
 {
@@ -191,5 +192,22 @@ namespace DungeonRpg.Engine
             entities.AddRange(EnemyService.All().Where(e => e.Position == position && e.CurrentMapId == mapId));
             return entities;
         }
+    }
+
+    public class ActionFactory 
+    {
+        public PlayerService PlayerService { get; }
+        public ItemService ItemService { get; }
+        public MapService MapService { get; }
+
+        public ActionFactory(PlayerService playerService, ItemService itemService, MapService mapService)
+        {
+            PlayerService = playerService;
+            ItemService = itemService;
+            MapService = mapService;
+        }
+
+        public void ExecuteMoveAction(Player player, MoveActionDirection direction)
+            => new MoveAction(player, direction).Execute(this);
     }
 }

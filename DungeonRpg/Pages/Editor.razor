@@ -1,6 +1,7 @@
 ﻿@page "/editor"
 @using System.Timers
 @using DungeonRpg.Engine
+@using static DungeonRpg.Engine.Map 
 @inject MapService mapService
 @inject ComponentService componentService
 @inject ItemService itemService
@@ -55,9 +56,9 @@
         </fieldset>
         <fieldset>
             <legend>Layers</legend>
-            <EditorButton Text="Overlay" Active="Layer == 2" OnClickCallback="() => SetLayer(2)" />
-            <EditorButton Text="Solid" Active="Layer == 1" OnClickCallback="() => SetLayer(1)" />
-            <EditorButton Text="Floor" Active="Layer == 0" OnClickCallback="() => SetLayer(0)" />
+            <EditorButton Text="Overlay" Active="Layer == LayerType.Overlay" OnClickCallback="() => SetLayer(LayerType.Overlay)" />
+            <EditorButton Text="Solid" Active="Layer == LayerType.Solid" OnClickCallback="() => SetLayer(LayerType.Solid)" />
+            <EditorButton Text="Floor" Active="Layer == LayerType.Floor" OnClickCallback="() => SetLayer(LayerType.Floor)" />
         </fieldset>
         <fieldset>
             <legend>Nav</legend>
@@ -104,7 +105,7 @@
                             {
                                 (int x, int y) position = (x + Position.X, y + Position.Y);
                                 <div class="map-tile" @onclick="() => Click(position)" @onkeydown="KeyboardHandler">
-                                    @for (int layer = 0; layer < Map.Layers; layer++)
+                                    @foreach(var layer in Map.LayersEnumerable())
                                     {
                                         var tileId = Map[layer, position.x, position.y];
                                         if (tileId != 0)
@@ -639,13 +640,14 @@
 </div>
 
 @code {
+
     private Map Map { get; set; }
     private enum DrawMode { Pen, Rectangle, All, Fill, Copy, Remove };
     private DrawMode Mode { get; set; }
     private int SelectedTileIndex = 951;
     private Timer AutoSaveTimer;
     private bool EnableAutoSave = true;
-    private int Layer = 0;
+    private LayerType Layer = 0;
     private (int X, int Y) Position = (0, 0);
     private DateTime LastSaveTime = DateTime.MinValue;
     private Timer UpdateTimer;
@@ -671,11 +673,11 @@
         InvokeAsync(StateHasChanged);
     }
 
-    void OnTileChanged(int index)
+    void OnTileChanged(int id)
     {
         // Called from child component, so we need to notify
         // the parent that the state has changed.
-        SelectedTileIndex = index;
+        SelectedTileIndex = id;
         StateHasChanged();
     }
 
@@ -700,7 +702,7 @@
         Mode = mode;
     }
 
-    private void SetLayer(int layer)
+    private void SetLayer(LayerType layer)
     {
         Layer = layer;
     }

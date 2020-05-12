@@ -17,11 +17,14 @@ namespace DungeonRpg.Engine
         public int Height { get; set; }
         private int[,,] Data { get; set; }
         public const int Layers = 3;
+        public enum LayerType { Floor = 0, Solid = 1, Overlay = 2 }
 
         public Map()
         {
             Data = new int[Layers, Width, Height];
         }
+
+        public IEnumerable<LayerType> LayersEnumerable() => Enumerable.Range(0, Layers).Select(i => (LayerType)i);
 
         private T[,,] ResizeArray<T>(T[,,] original, int x, int y, int z)
         {
@@ -41,7 +44,7 @@ namespace DungeonRpg.Engine
             Data = ResizeArray(Data, Layers, Width, Height);
         }
 
-        public int this[int layer, int x, int y]
+        public int this[LayerType layer, int x, int y]
         {
             get
             {
@@ -53,7 +56,7 @@ namespace DungeonRpg.Engine
                     }
                     else
                     {
-                        return Data[layer, x, y];
+                        return Data[(int)layer, x, y];
                     }
                 }
                 catch
@@ -65,14 +68,14 @@ namespace DungeonRpg.Engine
             {
                 if (IsInRegion(x, y))
                 {
-                    Data[layer, x, y] = value;
+                    Data[(int)layer, x, y] = value;
                 }
             }
         }
 
         private bool IsInRegion(int x, int y) => !(x < 0 || x >= Width || y < 0 || y >= Height);
 
-        public void FillLayer(int layer, int tileId)
+        public void FillLayer(LayerType layer, int tileId)
         {
             Task.Run(() =>
             {
@@ -86,7 +89,7 @@ namespace DungeonRpg.Engine
             });
         }
 
-        public void FillRectangle(int layer, (int x, int y) pos1, (int x, int y) pos2, int tileId)
+        public void FillRectangle(LayerType layer, (int x, int y) pos1, (int x, int y) pos2, int tileId)
         {
             Task.Run(() =>
             {
@@ -97,17 +100,17 @@ namespace DungeonRpg.Engine
                 {
                     for (int j = y; j <= y + h; j++)
                     {
-                        Data[layer, i, j] = tileId;
+                        this[layer, i, j] = tileId;
                     }
                 }
             });
         }
 
-        public void FloodFill(int layer, int x, int y, int tileId)
+        public void FloodFill(LayerType layer, int x, int y, int tileId)
         {
             Task.Run(() =>
             {
-                var floodTileId = Data[layer, x, y];
+                var floodTileId = this[layer, x, y];
                 var unvisited = new Queue<(int x, int y)>();
                 unvisited.Enqueue((x, y));
                 var visited = new bool[Width, Height];
@@ -115,14 +118,14 @@ namespace DungeonRpg.Engine
                 {
                     var current = unvisited.Dequeue();
                     visited[current.x, current.y] = true;
-                    Data[layer, current.x, current.y] = tileId;
+                    this[layer, current.x, current.y] = tileId;
 
                     foreach (var neighbour in new List<(int x, int y)> { (1, 0), (0, 1), (-1, 0), (0, -1) })
                     {
                         (int x, int y) adjacent = (current.x + neighbour.x, current.y + neighbour.y);
                         if (IsInRegion(adjacent.x, adjacent.y)
                             && !visited[adjacent.x, adjacent.y]
-                            && Data[layer, adjacent.x, adjacent.y] == floodTileId)
+                            && this[layer, adjacent.x, adjacent.y] == floodTileId)
                         {
                             visited[adjacent.x, adjacent.y] = true;
                             unvisited.Enqueue(adjacent);

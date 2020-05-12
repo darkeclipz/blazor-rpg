@@ -3,10 +3,12 @@
 @using System.Timers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Http
+@using static DungeonRpg.Engine.Map
 @inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager navigationManager
 @inject MapService mapService
 @inject PlayerService playerService
+@inject ActionFactory actionFactory 
 @inject IJSRuntime JSRuntime
 @attribute [Authorize]
 
@@ -24,7 +26,7 @@
                                 {
                                     (int x, int y) position = (x + Player.Position.X, y + Player.Position.Y);
                                     <div class="map-tile">
-                                        @for (int layer = 0; layer < Map.Layers; layer++)
+                                        @foreach (var layer in Map.LayersEnumerable())
                                         {
                                             var tileId = Map[layer, position.x, position.y];
                                             if (tileId == 4839)
@@ -175,32 +177,34 @@
 
     private bool IsTileWalkable((int x, int y) pos)
         => ManhattanDistance(pos.x, pos.y, Player.Position.X, Player.Position.Y) == 1
-        && Map[1, pos.x, pos.y] == 0;
+        && Map[LayerType.Solid, pos.x, pos.y] == 0;
 
     private int ManhattanDistance(int x1, int y1, int x2, int y2)
         => Math.Abs(x2 - x1) + Math.Abs(y2 - y1);
 
     private void WalkTo((int x, int y) position)
     {
-        if (IsTileWalkable(position))
-        {
-            Player.Position = position;
-        }
+        position.x -= Player.Position.X;
+        position.y -= Player.Position.Y;
+        if(position.x == 1) actionFactory.ExecuteMoveAction(Player, MoveAction.MoveActionDirection.Right);
+        else if(position.x == -1) actionFactory.ExecuteMoveAction(Player, MoveAction.MoveActionDirection.Left);
+        else if(position.y == 1) actionFactory.ExecuteMoveAction(Player, MoveAction.MoveActionDirection.Down);
+        else if(position.y == -1) actionFactory.ExecuteMoveAction(Player, MoveAction.MoveActionDirection.Up);
     }
 
     private void HandleKeyEvent(KeyboardEventArgs args)
     {
-        (int, int)? pos = args.Key switch
+        MoveAction.MoveActionDirection? direction = args.Key switch
         {
-            "w" => (Player.Position.X, Player.Position.Y - 1),
-            "a" => (Player.Position.X - 1, Player.Position.Y),
-            "s" => (Player.Position.X, Player.Position.Y + 1),
-            "d" => (Player.Position.X + 1, Player.Position.Y),
+            "w" => MoveAction.MoveActionDirection.Up,
+            "a" => MoveAction.MoveActionDirection.Left,
+            "s" => MoveAction.MoveActionDirection.Down,
+            "d" => MoveAction.MoveActionDirection.Right,
             _ => null
         };
-        if (pos.HasValue)
+        if (direction.HasValue)
         {
-            WalkTo(pos.Value);
+            actionFactory.ExecuteMoveAction(Player, direction.Value);
             LogInput = string.Empty;
         }
     }
