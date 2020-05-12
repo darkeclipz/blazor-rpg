@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static DungeonRpg.Engine.Map;
+using static DungeonRpg.Engine.MoveAction;
 
 namespace DungeonRpg.Engine
 {
@@ -53,4 +54,21 @@ namespace DungeonRpg.Engine
     public class ShopAction : Action { }
     public class BankAction : Action { }
     public class DialogAction : Action { }
+
+    public class ActionFactory
+    {
+        public PlayerService PlayerService { get; }
+        public ItemService ItemService { get; }
+        public MapService MapService { get; }
+
+        public ActionFactory(PlayerService playerService, ItemService itemService, MapService mapService)
+        {
+            PlayerService = playerService;
+            ItemService = itemService;
+            MapService = mapService;
+        }
+
+        public void ExecuteMoveAction(Player player, MoveActionDirection direction)
+            => new MoveAction(player, direction).Execute(this);
+    }
 }

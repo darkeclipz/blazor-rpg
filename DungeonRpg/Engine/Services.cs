@@ -193,21 +193,4 @@ namespace DungeonRpg.Engine
             return entities;
         }
     }
-
-    public class ActionFactory 
-    {
-        public PlayerService PlayerService { get; }
-        public ItemService ItemService { get; }
-        public MapService MapService { get; }
-
-        public ActionFactory(PlayerService playerService, ItemService itemService, MapService mapService)
-        {
-            PlayerService = playerService;
-            ItemService = itemService;
-            MapService = mapService;
-        }
-
-        public void ExecuteMoveAction(Player player, MoveActionDirection direction)
-            => new MoveAction(player, direction).Execute(this);
-    }
 }
