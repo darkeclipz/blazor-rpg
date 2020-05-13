@@ -9,7 +9,7 @@ with C#/Blazor (.NET Core).
 
 # Documentation
 
-[Click here to view the code documentation][DOCS.md]
+[Click here to view the code documentation](DOCS.md)
 
 # License
 
