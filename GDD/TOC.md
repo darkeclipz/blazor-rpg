@@ -2,7 +2,7 @@
 
 This is the table of contents for the game design document:
 
-1. [Attributes](ATTRIBUTES.MD)
+1. [Attributes](ATTRIBUTES.md)
 2. [Races](RACES.md)
 3. [Items](ITEMS.md)
 4. [Player](PLAYER.md)
