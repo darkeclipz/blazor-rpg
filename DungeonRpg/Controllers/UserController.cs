@@ -1,4 +1,5 @@
 ﻿using DungeonRpg.Engine;
+using DungeonRpg.Services;
 using DungeonRpg.Pages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -17,10 +18,14 @@ namespace DungeonRpg.Controllers
     public class UserController : Controller
     {
         private PlayerService PlayerService { get; set; }
+        private RaceService RaceService { get; set; }
+        private MapService MapService { get; set; }
 
         public UserController(IServiceProvider provider)
         {
             PlayerService = provider.GetService<PlayerService>();
+            RaceService = provider.GetService<RaceService>();
+            MapService = provider.GetService<MapService>();
         }
 
         // /api/User/GetUser
@@ -93,6 +98,9 @@ namespace DungeonRpg.Controllers
             var player = PlayerService.New();
             player.Name = model.Username;
             player.Password = model.Password;
+            player.Race = RaceService.Find(model.RaceId);
+            player.CurrentMapId = MapService.FindByName(Rules.DefaultMapName).Id;
+            player.Position = Rules.DefaultPosition;
 
             try
             {
@@ -157,6 +165,6 @@ namespace DungeonRpg.Controllers
         public string Username { get; set; }
         public string Password { get; set; }
         public Gender Gender { get; set; }
-        public Race Race { get; set; }
+        public Guid RaceId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DungeonRpg.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DungeonRpg.Engine
 {
+    [Serializable]
     public class Attributes
     {
         public int Strength { get; set; }
@@ -17,8 +19,17 @@ namespace DungeonRpg.Engine
     }
 
     public enum Gender { Male, Female }
-    public enum Race { Human, Elf, Orc, Draconian }
 
+    [Serializable]
+    public class Race : IKey<Race>
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public int MaleTileId { get; set; }
+        public int FemaleTileId { get; set; }
+    }
+
+    [Serializable]
     public abstract class Entity
     {
         public Guid Id { get; set; }
@@ -30,17 +41,23 @@ namespace DungeonRpg.Engine
         public (int X, int Y) Position = (0, 0);
         public Guid CurrentMapId { get; set; }
     }
-
+    [Serializable]
     public abstract class Character : Entity 
     { 
         public Gender Gender { get; set; }
         public Race Race { get; set; }
     }
-    public class Enemy : Entity, IKey<Enemy> { }
+    [Serializable]
+    public class Enemy : Entity, IKey<Enemy> 
+    {
+        public int TileId { get; set; }
+    }
+    [Serializable]
     public class Player : Character, IKey<Player>
     {
         public string Password { get; set; }
         public bool IsAdministrator { get; set; }
     }
+    [Serializable]
     public class Npc : Character, IKey<Npc> { }
 }

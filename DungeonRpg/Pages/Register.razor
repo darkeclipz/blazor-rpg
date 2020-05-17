@@ -1,4 +1,6 @@
-﻿<h1>Register</h1>
+﻿@using DungeonRpg.Services
+@inject RaceService RaceService  
+<h1>Register</h1>
 
 <p>Register a new account, and create a character!</p>
 <form action="api/User/register" method="post">
@@ -6,16 +8,23 @@
         <tr>
             <td>Race</td>
             <td>
-                <input type="radio" name="race" value="human"/> Human <br />
-                <input type="radio" name="race" value="elf"/> Elf <br />
-                <input type="radio" name="race" value="orc"/> Orc <br />
-                <input type="radio" name="race" value="draconian"/> Draconian
+                @foreach (var race in RaceService.All())
+                {
+                    if (race.Name == "Human")
+                    {
+                        <input type="radio" name="RaceId" value="@race.Id" checked/>@race.Name <br />
+                    }
+                    else
+                    {
+                        <input type="radio" name="RaceId" value="@race.Id" />@race.Name <br />
+                    }
+                }
             </td>
         </tr>
         <tr>
             <td>Gender</td>
             <td>
-                <input type="radio" name="gender" value="male"/> Male <br />
+                <input type="radio" name="gender" value="male" checked/> Male <br />
                 <input type="radio" name="gender" value="female"/> Female
             </td>
         </tr>

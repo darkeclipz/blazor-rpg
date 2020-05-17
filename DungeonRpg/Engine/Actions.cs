@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DungeonRpg.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,11 +8,13 @@ using static DungeonRpg.Engine.MoveAction;
 
 namespace DungeonRpg.Engine
 {
+    [Serializable]
     public abstract class Action
     {
         public virtual void Execute(ActionFactory factory) { }
     }
 
+    [Serializable]
     public class MoveAction : Action
     {
         private readonly Player player;

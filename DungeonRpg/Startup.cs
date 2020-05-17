@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using DungeonRpg.Engine;
+using DungeonRpg.Services;
 
 namespace DungeonRpg
 {
@@ -34,6 +35,7 @@ namespace DungeonRpg
             services.AddHttpContextAccessor();
             services.AddScoped<HttpContextAccessor>();
             services.AddSingleton<ComponentService>();
+            services.AddSingleton<RaceService>();
             services.AddSingleton<ItemService>();
             services.AddSingleton<PlayerService>();
             services.AddSingleton<NpcService>();
@@ -70,6 +72,18 @@ namespace DungeonRpg
                 endpoints.MapFallbackToPage("/_Host");
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+
+            InitializeData(app);
+        }
+
+        public void InitializeData(IApplicationBuilder app)
+        {
+            app.ApplicationServices.GetService<PlayerService>().InitializeInitialData();
+            app.ApplicationServices.GetService<RaceService>().InitializeInitialData();
+            app.ApplicationServices.GetService<ItemService>().InitializeInitialData();
+            app.ApplicationServices.GetService<EnemyService>().InitializeInitialData();
+            app.ApplicationServices.GetService<NpcService>().InitializeInitialData();
+            app.ApplicationServices.GetService<MapService>().InitializeInitialData();
         }
     }
 }

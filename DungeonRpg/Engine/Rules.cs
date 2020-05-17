@@ -9,5 +9,7 @@ namespace DungeonRpg.Engine
     {
         public static string DefaultMapName { get; set; } = "Overworld";
         public static (int X, int Y) DefaultPosition { get; set; } = (8, 8);
+        public static int DefaultGrassTileId { get; set; } = 6739;
+        public static int EditorRedCrossTileId { get; set; } = 4839;
     }
 }

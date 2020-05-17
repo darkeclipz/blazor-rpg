@@ -1,5 +1,6 @@
 ﻿@page "/client"
 @using DungeonRpg.Engine
+@using DungeonRpg.Services 
 @using System.Timers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Http
@@ -150,17 +151,6 @@
     private void LoadMap()
     {
         Map = mapService.Find(Player.CurrentMapId);
-        if (Map == null)
-        {
-            ResetMap();
-        }
-    }
-
-    private void ResetMap()
-    {
-        Map = mapService.FindByName(Rules.DefaultMapName);
-        Player.CurrentMapId = Map.Id;
-        Player.Position = Rules.DefaultPosition;
     }
 
     private void StartUpdateTimer()

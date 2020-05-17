@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DungeonRpg.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace DungeonRpg.Engine
 {
     public enum ItemType { Weapon, Armor, Jewelry, Consumable, Material, Book, Item }
     public enum ItemGrade { Common, Rare, Unique, Legendary }
+    [Serializable]
     public class Item : IKey<Item>
     {
         public Guid Id { get; set; }
@@ -30,7 +32,7 @@ namespace DungeonRpg.Engine
             _ => ItemType.Item
         };
     }
-
+    [Serializable]
     public abstract class Equipment : Item
     {
         public Attributes AttributesRequired { get; set; } = new Attributes();
@@ -39,6 +41,7 @@ namespace DungeonRpg.Engine
     }
 
     public enum ArmorType { Shield, Headwear, Body, Gloves, Boots }
+    [Serializable]
     public class Armor : Equipment
     {
         public ArmorType ArmorType { get; set; }
@@ -47,6 +50,7 @@ namespace DungeonRpg.Engine
 
     public enum WeaponType { OneHanded, TwoHanded };
     public enum DamageType { Physical, Magic };
+    [Serializable]
     public class Weapon : Equipment
     {
         public WeaponType WeaponType { get; set; }
@@ -56,15 +60,18 @@ namespace DungeonRpg.Engine
     }
 
     public enum JewelryType { Necklace, Ring, Earring }
+    [Serializable]
     public class Jewelry : Equipment
     {
         public JewelryType JewelryType { get; set; }
     }
-
+    [Serializable]
     public class Consumable : Item { }
+    [Serializable]
     public class Book : Item
     {
         public int Pages { get; set; }
     }
+    [Serializable]
     public class Material : Item { }
 }

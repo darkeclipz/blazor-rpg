@@ -1,8 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using DungeonRpg.Services;
+using Microsoft.AspNetCore.Razor.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 
 namespace DungeonRpg.Engine
@@ -18,10 +21,29 @@ namespace DungeonRpg.Engine
         private int[,,] Data { get; set; }
         public const int Layers = 3;
         public enum LayerType { Floor = 0, Solid = 1, Overlay = 2 }
+        private List<Entity> Entities { get; set; }
+        private List<MapItem> Items { get; set; }
 
         public Map()
         {
             Data = new int[Layers, Width, Height];
+            Entities = new List<Entity>();
+            Items = new List<MapItem>();
+        }
+
+        public void UpdateProperties()
+        {
+            //if(Entities == null)
+            //{
+            //    Entities = new List<MapEntity>();
+            //}
+            //if (Items == null)
+            //{
+            //    Items = new List<MapItem>();
+            //}
+
+            //Entities.Clear();
+            //Items.Clear();
         }
 
         public IEnumerable<LayerType> LayersEnumerable() => Enumerable.Range(0, Layers).Select(i => (LayerType)i);
@@ -52,7 +74,7 @@ namespace DungeonRpg.Engine
                 {
                     if (!IsInRegion(x, y))
                     {
-                        return 4839; // Red cross tile
+                        return Rules.EditorRedCrossTileId ; // Red cross tile
                     }
                     else
                     {
@@ -136,6 +158,82 @@ namespace DungeonRpg.Engine
                     }
                 }
             });
+        }
+
+        public void AddItem(Item item, int quantity, (int x, int y) position)
+        {
+            Items.Add(new MapItem(item, quantity, position));
+        }
+
+        public void RemoveItem(Guid id)
+        {
+            var item = Items.FirstOrDefault(i => i.Id == id);
+            Items.Remove(item);
+        }
+
+        public void GetItems() => Items.ToList();
+
+        public void AddEntity(Entity entity, (int x, int y) position)
+        {
+            entity = DeepClone(entity);
+            entity.Id = Guid.NewGuid();
+            entity.CurrentMapId = this.Id;
+            entity.Position = position;
+            Entities.Add(entity);
+        }
+
+        public void RemoveEntity(Guid id)
+        {
+            var entity = Entities.FirstOrDefault(e => e.Id == id);
+            Entities.Remove(entity);
+        }
+
+        public IEnumerable<Entity> GetEntitiesAtPosition((int x, int y) position)
+            => Entities.Where(e => e.Position == position).ToList();
+
+        public IEnumerable<(Item Item, int Quantity)> GetItemsAtPosition((int x, int y) position)
+            => Items.Where(i => i.Position == position).Select(i => (i.Item, i.Quantity)).ToList();
+
+        private static T DeepClone<T>(T obj)
+        {
+            using var ms = new MemoryStream();
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(ms, obj);
+            ms.Position = 0;
+            return (T)formatter.Deserialize(ms);
+        }
+
+        public void ClearEntitiesAndItems()
+        {
+            Entities.Clear();
+            Items.Clear();
+        }
+    }
+
+    public class MapItem
+    {
+        public Guid Id { get; set; }
+        public Item Item { get; set; }
+        public int Quantity { get; set; }
+        public (int X, int Y) Position { get; set; }
+
+        public MapItem(Item item, int quantity, (int x, int y) position)
+        {
+            item = DeepClone(item);
+            item.Id = Guid.NewGuid();
+            Id = item.Id;
+            Item = item;
+            Quantity = quantity;
+            Position = position;
+        }
+
+        private static T DeepClone<T>(T obj)
+        {
+            using var ms = new MemoryStream();
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(ms, obj);
+            ms.Position = 0;
+            return (T)formatter.Deserialize(ms);
         }
     }
 }
