@@ -45,7 +45,7 @@ namespace DungeonRpg.Engine
     public abstract class Character : Entity 
     { 
         public Gender Gender { get; set; }
-        public Race Race { get; set; }
+        public Race Race { get; set; } = new Race();
     }
     [Serializable]
     public class Enemy : Entity, IKey<Enemy> 

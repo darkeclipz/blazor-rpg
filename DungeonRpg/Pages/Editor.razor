@@ -146,6 +146,12 @@
                                         <div class="tile tile-71"></div>
                                     </div>
                                 }
+                                @if (ShowInspectOverlay(position))
+                                {
+                                    <div class="map-tile-layer">
+                                        <div class="tile tile-8"></div>
+                                    </div>
+                                }
                             </div>
                             }
                         </div>
@@ -1027,5 +1033,9 @@
             Map.AddEntity(entity, position);
         }
     }
+
+    private bool ShowInspectOverlay((int x, int y) position)
+        => (!Map.IsEmpty(position) || playerService.GetPlayersAtPosition(position, Map.Id).Count() > 0)
+        && Mode == DrawMode.Inspect;
 }
 

@@ -208,6 +208,9 @@ namespace DungeonRpg.Engine
             Entities.Clear();
             Items.Clear();
         }
+
+        public bool IsEmpty((int x, int y) position)
+            => GetEntitiesAtPosition(position).Count() == 0;
     }
 
     public class MapItem
