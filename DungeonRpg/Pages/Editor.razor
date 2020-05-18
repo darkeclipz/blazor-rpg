@@ -873,7 +873,7 @@
     private Map Map { get; set; }
     private enum DrawMode { Pen, Rectangle, All, Fill, Copy, Remove, Inspect };
     private DrawMode Mode { get; set; }
-    private int SelectedTileIndex = 951;
+    private int SelectedTileIndex = Settings.DefaultGrassTileId;
     private Timer AutoSaveTimer;
     private bool EnableAutoSave = true;
     private LayerType Layer = 0;

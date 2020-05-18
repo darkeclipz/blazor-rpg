@@ -99,8 +99,8 @@ namespace DungeonRpg.Controllers
             player.Name = model.Username;
             player.Password = model.Password;
             player.Race = RaceService.Find(model.RaceId);
-            player.CurrentMapId = MapService.FindByName(Rules.DefaultMapName).Id;
-            player.Position = Rules.DefaultPosition;
+            player.CurrentMapId = MapService.FindByName(Settings.DefaultMapName).Id;
+            player.Position = Settings.DefaultPosition;
 
             try
             {

@@ -1,6 +1,5 @@
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\appsettings.Development.json
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\appsettings.json
-C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\libman.json
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\Properties\launchSettings.json
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\DungeonRpg.exe
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\DungeonRpg.deps.json
@@ -65,3 +64,9 @@ C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreap
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreapp3.1\DungeonRpg.pdb
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreapp3.1\DungeonRpg.genruntimeconfig.cache
 C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\obj\Release\netcoreapp3.1\DungeonRpg.csprojAssemblyReference.cache
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\Data\enemy.data.json
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\Data\item.data.json
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\Data\map.data.json
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\Data\npc.data.json
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\Data\player.data.json
+C:\Users\Isomorphism\Documents\Repos\DungeonRpg\DungeonRpg\bin\Release\netcoreapp3.1\Data\race.data.json

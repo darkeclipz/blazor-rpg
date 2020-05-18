@@ -13,9 +13,7 @@ namespace DungeonRpg.Engine
             while (retries-- > 0)
             {
                 // Get a random direction
-#pragma warning disable CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
-                (int x, int y) = Probability.Random.Next(0, 4) switch
-#pragma warning restore CS8509 // The switch expression does not handle all possible values of its input type (it is not exhaustive).
+                (int x, int y) = Probability.Uniform(0, 3) switch
                 {
                     0 => (0, 1),
                     1 => (0, -1),
@@ -27,9 +25,9 @@ namespace DungeonRpg.Engine
                 (int x, int y) targetPosition = (enemy.Position.X + x, enemy.Position.Y + y);
                 var distance = Math.Abs(targetPosition.x - enemy.InitialPosition.X) 
                     + Math.Abs(targetPosition.y - enemy.InitialPosition.Y);
-                var walkable = map[Map.LayerType.Solid, targetPosition.x, targetPosition.y] == 0;
+                var isInRadius = distance <= enemy.WalkRadius;
 
-                if (walkable && distance <= enemy.WalkRadius)
+                if (isInRadius && map.IsWalkable(targetPosition))
                 {
                     enemy.Position = targetPosition;
                     break;

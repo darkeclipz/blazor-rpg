@@ -11,7 +11,7 @@ namespace DungeonRpg.Engine
     [Serializable]
     public abstract class Action
     {
-        public virtual void Execute(ActionFactory factory) { }
+        public virtual void Execute(ActionProvider provider) { }
     }
 
     [Serializable]
@@ -25,7 +25,7 @@ namespace DungeonRpg.Engine
             this.direction = direction;
         }
         public enum MoveActionDirection { Left, Up, Down, Right };
-        public override void Execute(ActionFactory factory)
+        public override void Execute(ActionProvider provider)
         {
             (int x, int y) position = direction switch
             {
@@ -35,7 +35,7 @@ namespace DungeonRpg.Engine
                 MoveActionDirection.Right => (player.Position.X + 1, player.Position.Y),
                 _ => player.Position
             };
-            var map = factory.MapService.Find(player.CurrentMapId);
+            var map = provider.MapService.Find(player.CurrentMapId);
             if(map.IsWalkable(position))
             {
                 player.Position = position;
@@ -53,13 +53,13 @@ namespace DungeonRpg.Engine
     public class BankAction : Action { }
     public class DialogAction : Action { }
 
-    public class ActionFactory
+    public class ActionProvider
     {
         public PlayerService PlayerService { get; }
         public ItemService ItemService { get; }
         public MapService MapService { get; }
 
-        public ActionFactory(PlayerService playerService, ItemService itemService, MapService mapService)
+        public ActionProvider(PlayerService playerService, ItemService itemService, MapService mapService)
         {
             PlayerService = playerService;
             ItemService = itemService;

@@ -19,7 +19,11 @@ namespace DungeonRpg.Services
             PlayerService = playerService;
             NpcService = npcService;
             EnemyService = enemyService;
+            StartAiTimers();
+        }
 
+        private void StartAiTimers()
+        {
             foreach(var map in Entities)
             {
                 map.StartAiTimer();
@@ -33,7 +37,7 @@ namespace DungeonRpg.Services
             map.Width = 16;
             map.Height = 16;
             map.Resize();
-            map.FillLayer(0, Rules.DefaultGrassTileId);
+            map.FillLayer(0, Settings.DefaultGrassTileId);
             return map;
         }
 
@@ -74,7 +78,7 @@ namespace DungeonRpg.Services
                 map.Width = 200;
                 map.Height = 200;
                 map.Resize();
-                map.FillLayer(0, Rules.DefaultGrassTileId);
+                map.FillLayer(0, Settings.DefaultGrassTileId);
                 map.Name = "Overworld";
             }
         }

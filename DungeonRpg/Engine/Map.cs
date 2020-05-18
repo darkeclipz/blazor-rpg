@@ -97,7 +97,7 @@ namespace DungeonRpg.Engine
                 {
                     if (!IsInRegion(x, y))
                     {
-                        return Rules.EditorRedCrossTileId ; // Red cross tile
+                        return Settings.EditorRedCrossTileId ; // Red cross tile
                     }
                     else
                     {
@@ -119,6 +119,7 @@ namespace DungeonRpg.Engine
         }
 
         public bool IsWalkable((int x, int y) position) => this[LayerType.Solid, position.x, position.y] == 0;
+
         public bool IsWalkable(int x, int y) => this[LayerType.Solid, x, y] == 0;
 
         private bool IsInRegion(int x, int y) => !(x < 0 || x >= Width || y < 0 || y >= Height);
@@ -184,9 +185,8 @@ namespace DungeonRpg.Engine
         }
 
         public void AddItem(Item item, int quantity, (int x, int y) position)
-        {
-            Items.Add(new MapItem(item, quantity, position));
-        }
+            => Items.Add(new MapItem(item, quantity, position));
+        
 
         public void RemoveItem(Guid id)
         {
@@ -198,7 +198,7 @@ namespace DungeonRpg.Engine
 
         public void AddEntity(Entity entity, (int x, int y) position)
         {
-            entity = DeepClone(entity);
+            entity = Helpers.DeepClone(entity);
             entity.Id = Guid.NewGuid();
             entity.CurrentMapId = this.Id;
             entity.Position = position;
@@ -221,15 +221,6 @@ namespace DungeonRpg.Engine
         public IEnumerable<(Item Item, int Quantity)> GetItemsAtPosition((int x, int y) position)
             => Items.Where(i => i.Position == position).Select(i => (i.Item, i.Quantity)).ToList();
 
-        private static T DeepClone<T>(T obj)
-        {
-            using var ms = new MemoryStream();
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(ms, obj);
-            ms.Position = 0;
-            return (T)formatter.Deserialize(ms);
-        }
-
         public void ClearEntitiesAndItems()
         {
             Entities.Clear();
@@ -249,21 +240,12 @@ namespace DungeonRpg.Engine
 
         public MapItem(Item item, int quantity, (int x, int y) position)
         {
-            item = DeepClone(item);
+            item = Helpers.DeepClone(item);
             item.Id = Guid.NewGuid();
             Id = item.Id;
             Item = item;
             Quantity = quantity;
             Position = position;
-        }
-
-        private static T DeepClone<T>(T obj)
-        {
-            using var ms = new MemoryStream();
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(ms, obj);
-            ms.Position = 0;
-            return (T)formatter.Deserialize(ms);
         }
     }
 }

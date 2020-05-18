@@ -46,14 +46,6 @@ namespace DungeonRpg.Services
             return entity;
         }
 
-        public virtual T Update(T entity)
-        {
-            var storedEntity = Find(entity.Id);
-            Entities.Remove(storedEntity);
-            Entities.Add(entity);
-            return entity;
-        }
-
         public virtual void Remove(T entity)
         {
             Entities.Remove(entity);
@@ -67,10 +59,10 @@ namespace DungeonRpg.Services
         protected string GetFileName()
         {
             var name = Entities.GetType().FullName;
-            var start = name.IndexOf("[[") + 13;
+            var start = name.IndexOf("[[") + 20;
             var stop = name.IndexOf(",") - start;
             var type = name.Substring(start, stop).ToLower();
-            return type + ".service.data";
+            return "Data/" + type + ".data.json";
         }
 
         protected JsonSerializerSettings GetSerializerSettings()

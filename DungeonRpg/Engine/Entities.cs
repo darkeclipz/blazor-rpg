@@ -62,10 +62,30 @@ namespace DungeonRpg.Engine
         {
             if(AiEnabled)
             {
-                EnemyAi.ExecuteRandomWalkInRadius(this, map);
+                // move to some other class??
+                switch(State)
+                {
+                    case EnemyAiState.Attacking:
+                        // No player nearby? => Idle
+                        // Walk to the player
+                        // Attack the player
+                        break;
+                    case EnemyAiState.Idle:
+                        // Is a player nearby and aggressive? => Attacking
+                        EnemyAi.ExecuteRandomWalkInRadius(this, map);
+                        break;
+                    case EnemyAiState.Dead:
+                        // Add a respawn time
+                        Health = MaxHealth;
+                        State = EnemyAiState.Idle;
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
     }
+
     [Serializable]
     public class Player : Character, IKey<Player>
     {
@@ -73,6 +93,7 @@ namespace DungeonRpg.Engine
         public string Password { get; set; }
         public bool IsAdministrator { get; set; }
     }
+
     [Serializable]
     public class Npc : Character, IKey<Npc> { }
 }
