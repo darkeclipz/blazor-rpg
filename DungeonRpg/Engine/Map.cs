@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace DungeonRpg.Engine
 {
@@ -23,12 +24,34 @@ namespace DungeonRpg.Engine
         public enum LayerType { Floor = 0, Solid = 1, Overlay = 2 }
         private List<Entity> Entities { get; set; }
         private List<MapItem> Items { get; set; }
+        private Timer AiUpdateTimer { get; set; }
 
         public Map()
         {
             Data = new int[Layers, Width, Height];
             Entities = new List<Entity>();
             Items = new List<MapItem>();
+            StartAiTimer();
+        }
+
+        public void StartAiTimer()
+        {
+            AiUpdateTimer = new Timer();
+            AiUpdateTimer.Elapsed += AiUpdateTimer_Elapsed;
+            AiUpdateTimer.AutoReset = true;
+            AiUpdateTimer.Interval = 1000;
+            AiUpdateTimer.Start();
+        }
+
+        private void AiUpdateTimer_Elapsed(object sender, EventArgs args)
+        {
+            foreach(var entity in Entities)
+            {
+                if(entity is Enemy enemy)
+                {
+                    enemy.AiTick(this);
+                }
+            }
         }
 
         public void UpdateProperties()
@@ -179,6 +202,10 @@ namespace DungeonRpg.Engine
             entity.Id = Guid.NewGuid();
             entity.CurrentMapId = this.Id;
             entity.Position = position;
+            if(entity is Enemy enemy)
+            {
+                enemy.InitialPosition = entity.Position;
+            }
             Entities.Add(entity);
         }
 

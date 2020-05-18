@@ -152,6 +152,12 @@
                                         <div class="tile tile-8"></div>
                                     </div>
                                 }
+                                @if (InspectCoordinates.HasValue && position == InspectCoordinates.Value)
+                                {
+                                    <div class="map-tile-layer">
+                                        <div class="tile tile-10"></div>
+                                    </div>
+                                }
                             </div>
                             }
                         </div>
@@ -709,6 +715,31 @@
                                     </table>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>Enable AI</td>
+                                <td><input type="checkbox" @bind="enemy.AiEnabled" /></td>
+                            </tr>
+                            <tr>
+                                <td>Initial position</td>
+                                <td>
+                                    <table class="table-borderless table-smallpadding">
+                                        <tr>
+                                            <td>X</td>
+                                            <td><input type="text" @bind="enemy.InitialPosition.X" /></td>
+                                            <td>Y</td>
+                                            <td><input type="text" @bind="enemy.InitialPosition.Y" /></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Walk radius</td>
+                                <td><input type="text" @bind="enemy.WalkRadius" /></td>
+                            </tr>
+                            <tr>
+                                <td>Aggressive</td>
+                                <td><input type="checkbox" @bind="enemy.IsAggressive" /></td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -724,12 +755,12 @@
                         <tr>
                             <td>Entities</td>
                             <td>
-                                <table>
+                                <table class="table-borderless table-condensed">
                                     <thead>
                                         <tr>
                                             <td>Name</td>
                                             <td>Type</td>
-                                            <td>Actions</td>
+                                            <td></td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -739,7 +770,7 @@
                                                 <td>@entity.Name</td>
                                                 <td>@entity.GetType().Name</td>
                                                 <td>
-                                                    <button @onclick="() => DisplayEntityProperties(entity)">&#129146;</button>
+                                                    <button @onclick="() => DisplayEntityProperties(entity)" class="button-small">&#129146;</button>
                                                 </td>
                                             </tr>
                                         }
@@ -749,8 +780,8 @@
                                                 <td>@entity.Name</td>
                                                 <td>@entity.GetType().Name</td>
                                                 <td>
-                                                    <button @onclick="() => Map.RemoveEntity(entity.Id)">&#10060;</button>
-                                                    <button @onclick="() => DisplayEntityProperties(entity)">&#129146;</button>
+                                                    <button @onclick="() => Map.RemoveEntity(entity.Id)" class="button-small">&#10060;</button>
+                                                    <button @onclick="() => DisplayEntityProperties(entity)" class="button-small">&#129146;</button>
                                                 </td>
                                             </tr>
                                         }
@@ -962,8 +993,8 @@
                 }
                 break;
             case DrawMode.Inspect:
-                InspectCoordinates = position;
                 DisableAllPropertyDisplays();
+                InspectCoordinates = position;
                 ShowInspectProperties = true;
                 break;
         }
@@ -1002,6 +1033,7 @@
         ShowEntityProperties = false;
         ShowInspectProperties = false;
         ShowRaceProperties = false;
+        InspectCoordinates = null;
     }
 
     private void Move(int x, int y)

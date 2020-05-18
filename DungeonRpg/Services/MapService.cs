@@ -19,6 +19,11 @@ namespace DungeonRpg.Services
             PlayerService = playerService;
             NpcService = npcService;
             EnemyService = enemyService;
+
+            foreach(var map in Entities)
+            {
+                map.StartAiTimer();
+            }
         }
 
         public override Map New()

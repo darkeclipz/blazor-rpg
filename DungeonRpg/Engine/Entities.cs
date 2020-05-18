@@ -51,10 +51,25 @@ namespace DungeonRpg.Engine
     public class Enemy : Entity, IKey<Enemy> 
     {
         public int TileId { get; set; }
+        public enum EnemyAiState { Idle, Attacking, Dead };
+        public EnemyAiState State { get; set; } = EnemyAiState.Idle;
+        public bool AiEnabled { get; set; }
+        public (int X, int Y) InitialPosition = (0, 0);
+        public int WalkRadius { get; set; }
+        public bool IsAggressive { get; set; }
+
+        internal void AiTick(Map map)
+        {
+            if(AiEnabled)
+            {
+                EnemyAi.ExecuteRandomWalkInRadius(this, map);
+            }
+        }
     }
     [Serializable]
     public class Player : Character, IKey<Player>
     {
+        [Obsolete("Hash this shit!")]
         public string Password { get; set; }
         public bool IsAdministrator { get; set; }
     }
